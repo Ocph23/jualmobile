@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:vm="clr-namespace:MainApp.Views.Barangs"
+             Title="{Binding Title}" BackgroundColor="WhiteSmoke"
+             x:Class="MainApp.Views.Barangs.BarangPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <SearchBar Text="{Binding SearchText}"></SearchBar>
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" 
+             Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView >
+                                <SwipeView.RightItems>
+                                    <SwipeItems >
+                                        <SwipeItemView >
+                                            <StackLayout VerticalOptions="CenterAndExpand" Margin="5">
+                                                <Button Text="Edit" BackgroundColor="Orange" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BarangViewModel}}, Path=EditCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+                                                <Button Text="Delete" BackgroundColor="Red" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BarangViewModel}}, Path=DeleteCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+                                                
+                                            </StackLayout>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems >
+                                        <SwipeItemView >
+                                            <StackLayout VerticalOptions="CenterAndExpand" Margin="5">
+                                                <Button Text="Satuan" BackgroundColor="ForestGreen" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BarangViewModel}}, Path=ShowSatuanCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+                                            </StackLayout>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <!-- Content -->
+                                <StackLayout  Padding="5">
+                                    <Frame CornerRadius="10" Margin="2">
+                                        <StackLayout>
+                                            <Label>
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="("></Span>
+                                                        <Span Text="{Binding Id, StringFormat='{0:D5}'}"></Span>
+                                                        <Span Text=")  "></Span>
+                                                        <Span Text="{Binding Nama}"></Span>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label Text="{Binding Keterangan}" FontSize="Micro" ></Label>
+
+                                        </StackLayout>
+                                    </Frame>
+                                </StackLayout>
+                            </SwipeView>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

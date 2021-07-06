@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MainApp.Views.Barangs"
+             Title="{Binding Title}"
+             x:Class="MainApp.Views.Barangs.SatuanPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+             Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView >
+                                <SwipeView.RightItems>
+                                    <SwipeItems >
+                                        <SwipeItemView >
+                                            <StackLayout VerticalOptions="CenterAndExpand" Margin="5">
+                                                <Button Text="Edit" BackgroundColor="Orange" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SatuanViewModel}}, Path=EditCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+                                                <Button Text="Delete" BackgroundColor="Red" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SatuanViewModel}}, Path=DeleteCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+
+                                            </StackLayout>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <!-- Content -->
+                                <StackLayout Padding="2">
+                                    <Frame CornerRadius="10" Margin="2">
+                                        <StackLayout>
+                                            <StackLayout>
+                                               
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="50*"/>
+                                                        <ColumnDefinition Width="50*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackLayout>
+                                                        <Label FontSize="Micro">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="Level &amp; Satuan"></Span>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+
+                                                        <Label>
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="{Binding Level}"></Span>
+                                                                    <Span Text="    "></Span>
+                                                                    <Span Text="{Binding Nama}"></Span>
+                                                                    <Span></Span>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+                                                    <StackLayout Grid.Column="1">
+                                                        <Label HorizontalOptions="End"  Text="Jumlah" FontSize="Micro"></Label>
+                                                        <Label HorizontalOptions="End">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="{Binding Quantity}"></Span>
+                                                                    <Span></Span>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+
+                                                </Grid>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="50*"/>
+                                                        <ColumnDefinition Width="50*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackLayout>
+                                                        <Label Margin="0,10,0,0" Text="Beli" FontSize="Micro"></Label>
+                                                        <Label >
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="Rp. "></Span>
+                                                                    <Span Text="{Binding HargaBeli, StringFormat='{0:N}'}"></Span>
+                                                                    <Span></Span>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+                                                    <StackLayout Grid.Column="1">
+                                                        <Label HorizontalOptions="End"  Text="Jual" FontSize="Micro"></Label>
+                                                        <Label HorizontalOptions="End">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="Rp. "></Span>
+                                                                    <Span Text="{Binding HargaJual, StringFormat='{0:N}'}"></Span>
+                                                                    <Span></Span>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+                                                    
+                                                </Grid>
+
+                                               
+                                                
+                                               
+
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </StackLayout>
+                            </SwipeView>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

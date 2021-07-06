@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MainApp.Views.Barangs"
+             Title="{Binding Title}"
+             x:Class="MainApp.Views.Barangs.AddBarangPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame CornerRadius="10" Margin="10">
+                <StackLayout>
+                    <Label Margin="0,10,0,0" Text="Nama Barang" FontSize="Micro"></Label>
+                    <Entry Text="{Binding Model.Nama}" ></Entry>
+
+                    <Label Margin="0,10,0,0"  Text="Keterangan" FontSize="Micro"></Label>
+                    <Editor HeightRequest="100" Text="{Binding Model.Alamat}" ></Editor>
+                </StackLayout>
+            </Frame>
+                <Button IsVisible="{Binding ShowSatuan}" Command="{Binding ShowSatuanCommand}" Margin="10" Text="Lihat Satuan"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

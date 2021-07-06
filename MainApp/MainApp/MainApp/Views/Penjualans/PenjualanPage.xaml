@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MainApp.Views.Penjualans.PenjualanPage"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+             Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="2">
+                                <Frame CornerRadius="10" Margin="10">
+                                    <StackLayout>
+                                        <Label HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                        <Label Text="{Binding Supplier.Nama}" FontSize="Medium"></Label>
+                                        <Label >
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Rp. "></Span>
+                                                    <Span Text="{Binding Total, StringFormat='{0:N}'}" ></Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+        </ContentPage.Content>
+</ContentPage>

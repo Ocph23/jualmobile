@@ -1,0 +1,120 @@
+﻿using MainApp.Models;
+using SQLite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+
+namespace MainApp.Services
+{
+
+    public interface IBarangStore : IDataStore<Barang>
+    {
+        Task<Satuan> AddSatuan(int barangId, Satuan satuan);
+        Task<List<Satuan>> GetSatuans(int barangId);
+        Task<bool> EditSatuan(Satuan satuan);
+    }
+
+
+    public class BarangStore : IBarangStore
+    {
+        public SQLiteAsyncConnection Database { get; }
+
+        public BarangStore()
+        {
+             var service= DependencyService.Get<DatabaseIntialization>();
+             Database=   service.GetDatabase();
+        }
+
+        public Task<int> AddItemAsync(Barang item)
+        {
+            var result = Database.InsertAsync(item);
+            return result;
+        }
+
+        public async Task<bool> DeleteItemAsync(int id)
+        {
+            var item = await GetItemAsync(id);
+            var result = await Database.DeleteAsync(item);
+            return result > 0 ? true : false;
+        }
+
+        public async Task<Barang> GetItemAsync(int id)
+        {
+            try
+            {
+                var data = await Database.Table<Barang>().Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (data == null)
+                    throw new SystemException("Data Tidak Ditemukan !");
+                data.Satuans = await Database.Table<Satuan>().Where(x => x.BarangId == id).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public Task<List<Barang>> GetItemsAsync(bool forceRefresh = false)
+        {
+            try
+            {
+                return Database.Table<Barang>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public async Task<bool> UpdateItemAsync(Barang item)
+        {
+            var result = await Database.UpdateAsync(item);
+            return result > 0 ? true : false;
+        }
+
+        public Task<Satuan> AddSatuan(int barangId, Satuan satuan)
+        {
+            satuan.BarangId = barangId;
+            var result = Database.InsertAsync(satuan);
+            return Task.FromResult(satuan);
+        }
+
+        public Task<List<Satuan>> GetSatuans(int barangId)
+        {
+            return Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
+        }
+
+        public async Task<bool> EditSatuan(Satuan satuan)
+        {
+            try
+            {
+                var results = await Database.InsertOrReplaceAsync(satuan);
+                if (results > 0)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteSatuan(Satuan satuan)
+        {
+            try
+            {
+                var results = await Database.DeleteAsync(satuan);
+                if (results > 0)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+    }
+}

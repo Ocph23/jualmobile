@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MainApp.Views.Suppliers.AddSupplierPage" 
+             xmlns:vm="clr-namespace:MainApp.Views.Suppliers"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Frame CornerRadius="10" Margin="10">
+            <StackLayout>
+                <Label Text="ID" FontSize="Micro"></Label>
+                <Entry IsReadOnly="True" Text="{Binding Model.Id}" ></Entry>
+
+                <Label Margin="0,10,0,0" Text="Nama Supplier" FontSize="Micro"></Label>
+                <Entry Text="{Binding Model.Nama}" ></Entry>
+
+                <Label Margin="0,10,0,0"  Text="Kontak" FontSize="Micro"></Label>
+                <Entry Text="{Binding Model.Kontak}" ></Entry>
+
+                <Label Margin="0,10,0,0"  Text="Alamat" FontSize="Micro"></Label>
+                <Editor HeightRequest="150" Text="{Binding Model.Alamat}" ></Editor>
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>
