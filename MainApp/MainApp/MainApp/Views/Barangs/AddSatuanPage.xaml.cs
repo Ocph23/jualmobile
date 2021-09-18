@@ -64,10 +64,17 @@ namespace MainApp.Views.Barangs
 
                 try
                 {
-                    if (string.IsNullOrEmpty(Model.Nama))
-                    {
+                    if (Model.Quantity<=0)
+                        throw new SystemException("Jumlah Harus Lebih Besar Dari 0 !");
+                    
+                    if (string.IsNullOrEmpty(Model.Nama) )
                         throw new SystemException("Nama Tidak Boleh Kosong !");
-                    }
+
+                    if(Model.HargaBeli<=0 || Model.HargaJual<=0)
+                            throw new SystemException("Harga Jual Dan Harga Beli Tidak Boleh Kosong !");
+
+                    if(Model.HargaBeli >= Model.HargaJual)
+                            throw new SystemException("Harga Jual Harus Lebih Besar !");
 
                     var saved = false;
                     if (Model.Id <= 0)
@@ -95,6 +102,7 @@ namespace MainApp.Views.Barangs
                     else
                     {
                         await Helper.InfoMessage("Data Berhasil Disimpan !");
+                        await AppShell.Current.Navigation.PopAsync();
                     }
                 }
                 catch (Exception ex)

@@ -3,7 +3,7 @@ using System;
 
 namespace MainApp.Models
 {
-    public class Supplier:BaseEntity
+    public class Supplier:BaseNotify
     {
         private int id;
 

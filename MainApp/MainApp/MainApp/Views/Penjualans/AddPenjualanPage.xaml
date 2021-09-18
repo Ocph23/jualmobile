@@ -1,12 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:helpers="clr-namespace:MainApp.Helpers"
+             xmlns:model="clr-namespace:MainApp.Models"
+             Title="{Binding Model.Id,StringFormat='{0:D5}'}"
+             xmlns:vm="clr-namespace:MainApp.Views.Penjualans"
+BackgroundColor="WhiteSmoke"
              x:Class="MainApp.Views.Penjualans.AddPenjualanPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+          <StackLayout>
+            <Frame >
+                <StackLayout>
+                  
+                    <Label Text="Pelanggan" FontSize="Micro"/>
+                    <Entry Text="{Binding Model.Pelanggan}"/>
+                    <Label Text="Tanggal" FontSize="Micro"/>
+                    <DatePicker Date="{Binding Model.Tanggal}"/>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label Text="Cari barang" VerticalOptions="Center"/>
+                        <ImageButton VerticalOptions="Center" Command="{Binding SearchCommand}"  WidthRequest="40" Padding="10" HorizontalOptions="End"
+                                     HeightRequest="40" Source="search.png"/>
+                        <ImageButton VerticalOptions="Center" Command="{Binding ScanCommand}"  WidthRequest="40" Padding="10" HorizontalOptions="End"
+                                     HeightRequest="40" Source="scan.png"/>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+            <RefreshView x:DataType="vm:AddPenjualanViewModel">
+                <CollectionView ItemsSource="{Binding Items}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="2">
+                                <Frame CornerRadius="10">
+                                    <Grid  x:DataType="model:PenjualanItem">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout  Padding="10" >
+                                            <Label Text="{Binding Barang.Nama}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="15" />
+                                            <Label LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="14" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Rp. "></Span>
+                                                        <Span Text="{Binding Satuan.HargaBeli, StringFormat='{}{0:N}'}"></Span>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
+                                        <StackLayout Grid.Column="1"  >
+                                            <helpers:CustomStepper  ShowEntry="False" Text="{Binding Jumlah}" WidthRequest="130" HeightRequest="35"  Increment="1"  
+                                                                    Margin="5" VerticalOptions="CenterAndExpand"/>
+                                            <Picker Margin="0" ItemsSource="{Binding Barang.Satuans}" ItemDisplayBinding="{Binding Nama}" HeightRequest="32"
+                                                    FontSize="12" HorizontalTextAlignment="Center"  SelectedItem="{Binding Satuan}"/>
+                                            <Label HorizontalOptions="CenterAndExpand" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="12" >
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Rp . "></Span>
+                                                        <Span Text="{Binding Total,StringFormat='{}{0:N2}'}"></Span>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </StackLayout>
+                                    </Grid>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
+          <Frame Grid.Row="1">
+                <StackLayout Orientation="Horizontal">
+                    <Label Style="{StaticResource content }" FontAttributes="Bold">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span  Text="Total Rp."></Span>
+                                <Span></Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </StackLayout>
+          </Frame>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

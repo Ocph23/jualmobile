@@ -17,18 +17,21 @@ namespace MainApp.Views.Penjualans
     {
         public AddPenjualanPage()
         {
-            InitializeComponent();
+            InitializeComponent();              
+            BindingContext = new AddPenjualanViewModel();
         }
     }
 
     public class AddPenjualanViewModel : BaseViewModel
     {
+        private List<Barang> barangs;
 
         public ObservableCollection<PenjualanItem> Items { get; set; } = new ObservableCollection<PenjualanItem>();
         public ObservableCollection<Supplier> Suppliers { get; set; } = new ObservableCollection<Supplier>();
 
         public Penjualan Model { get; set; } = new Penjualan() { Items = new List<PenjualanItem>() };
         public Command SearchCommand { get; private set; }
+        public Command ScanCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
         public AddPenjualanViewModel()
@@ -47,20 +50,91 @@ namespace MainApp.Views.Penjualans
                 Suppliers.Add(item);
             }
 
-            SearchCommand = new Command(() => {
+            SearchCommand = new Command(() =>
+            {
                 var page = new Helpers.CariBarangDialog();
                 AppShell.Current.Navigation.PushModalAsync(page);
                 var vm = page.BindingContext as Helpers.CariBarangDialogViewModel; ;
                 vm.onFoundItem += Vm_onFoundItem;
             });
 
+            ScanCommand = new Command(() =>
+            {
+                var page = new BarcodePenjualanScanner();
+                AppShell.Current.Navigation.PushModalAsync(page);
+                var vm = page.BindingContext as BarcodePenjualanScannerViewModel;
+                vm.OnResultScanHandler += Vm_OnResultScanHandler1;
+            });
+
             SaveCommand = new Command(async () =>
             {
-                Model.Items = Items.ToList();
 
-              await  PenjualanStore.AddItemAsync(Model);
+                try
+                {
+
+                    Model.Items = Items.ToList();
+                    if (Model.Items == null || Model.Items.Count <= 0)
+                        throw new SystemException("Anda belum memilih barang  !");
+
+                    await PenjualanStore.AddItemAsync(Model);
+                    await Helper.InfoMessage("Data Berhasil Disimpan !");
+                    await AppShell.Current.Navigation.PopAsync();
+                }
+                catch (Exception ex)
+                {
+                    await Helper.ErrorMessage(ex.Message);
+                }
+
             });
         }
+
+        private async Task Vm_OnResultScanHandler1(object obj)
+        {
+            try
+            {
+                var barang = (Barang)obj;
+                if (barang == null)
+                        throw new SystemException("Barang Tidak Ditemukan !");
+
+                var itemPenjualan = Items.Where(x => x.Barang.Id== barang.Id).FirstOrDefault();
+                if (itemPenjualan == null)
+                {
+
+                    Satuan satuan=null;
+                    if(barang.Satuans!=null)
+                        satuan = barang.Satuans.FirstOrDefault();
+                    if (satuan == null)
+                    {
+                        throw new SystemException("Satuan Belum Ada !");
+                    }
+                    var item = new PenjualanItem
+                    {
+                        Barang = barang,
+                        BarangId = barang.Id,
+                        Harga = satuan == null ? 0 : satuan.HargaJual,
+                        Satuan = satuan,
+                        Jumlah = 1,
+                        SatuanId = satuan.Id,
+                    };
+
+                    Items.Add(item);
+               await Helper.LongToas("Barang Berhasil Ditambahkan !");
+                }
+                else
+                {
+                    itemPenjualan.Jumlah += 1;
+                    await Helper.LongToas($"Barang {itemPenjualan.Barang.Nama} Bertambah 1 !");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await Helper.LongToas(ex.Message);
+            }
+
+        }
+
+       
 
         private async Task Vm_onFoundItem(Barang barang)
         {

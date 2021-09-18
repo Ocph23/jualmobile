@@ -11,7 +11,7 @@
         <Frame CornerRadius="10" Margin="10">
             <StackLayout>
                 <Label Text="ID" FontSize="Micro"></Label>
-                <Entry IsReadOnly="True" Text="{Binding Model.Id}" ></Entry>
+                <Entry IsReadOnly="True" Text="{Binding Model.Id, StringFormat='{0:D10}'}" ></Entry>
 
                 <Label Margin="0,10,0,0" Text="Nama Supplier" FontSize="Micro"></Label>
                 <Entry Text="{Binding Model.Nama}" ></Entry>

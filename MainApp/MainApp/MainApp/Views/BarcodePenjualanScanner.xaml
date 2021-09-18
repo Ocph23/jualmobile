@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             x:Class="MainApp.Views.BarcodePenjualanScanner">
+    <ContentPage.Content>
+        <Frame>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Frame CornerRadius="20" Padding="4" Background="transparent">
+                    <Grid >
+                        <zxing:ZXingScannerView x:Name="scanView"                                         ScanResultCommand="{Binding ScanningCommand}"
+                                        IsScanning="{Binding IsScanning}"
+                                        VerticalOptions="CenterAndExpand"  
+                                        HorizontalOptions="CenterAndExpand"/>
+                        <zxing:ZXingDefaultOverlay Margin="5"  TopText="Harus Dalam Frame" ShowFlashButton="True"  FlashButtonClicked="zXingDefaultOverlay_FlashButtonClicked" />
+                    </Grid>
+                </Frame>
+
+                <Grid Grid.Row="1" Padding="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60*"/>
+                            <ColumnDefinition Width="40*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackLayout>
+                            <Label Style="{StaticResource title}" Text="Barcode"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Barcode}"/>
+
+                            <Label Style="{StaticResource title}" Text="ID Barang"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Id, StringFormat='{0:D8}'}"/>
+
+                            <Label Style="{StaticResource title}" Text="Nama Barang"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Nama}"/>
+
+                            <Label Style="{StaticResource title}" Text="Nama Keterangan"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Keterangan}"/>
+
+                            <Label Style="{StaticResource title}" Text="Nama Satuan"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Satuans[0].Nama}"/>
+
+                            <Label Style="{StaticResource title}" Text="Harga Jual"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Satuans[0].HargaJual, StringFormat='Rp. {0:N}'}"/>
+
+                            <Label Style="{StaticResource title}" Text="Harga Beli"/>
+                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Satuans[0].HargaBeli, StringFormat='Rp. {0:N}'}"/>
+
+                        </StackLayout>
+                        <StackLayout Grid.Column="1"  >
+                            <Image   Aspect="AspectFill" HorizontalOptions="CenterAndExpand"  Source="{Binding ImagePreview}"></Image>
+
+                        </StackLayout>
+                    </Grid>
+
+                <StackLayout Grid.Row="2" Orientation="Horizontal" IsVisible="{Binding ScanAgain}">
+                    <Button Margin="10"  HorizontalOptions="CenterAndExpand" Text="Reset" Command="{Binding ScanAgainCommand}" ></Button>
+                    <Button  Margin="10"  HorizontalOptions="CenterAndExpand" Text="OK" Command="{Binding TakeCommand}" ></Button>
+                </StackLayout>
+                <Button Margin="10" Grid.Row="2"  HorizontalOptions="CenterAndExpand" Text="Keluar" Command="{Binding CancalCommand}" ></Button>
+            </Grid>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

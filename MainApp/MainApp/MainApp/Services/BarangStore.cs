@@ -56,11 +56,19 @@ namespace MainApp.Services
             }
         }
 
-        public Task<List<Barang>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<List<Barang>> GetItemsAsync(bool forceRefresh = false)
         {
             try
             {
-                return Database.Table<Barang>().ToListAsync();
+                var barangs = await  Database.Table<Barang>().ToListAsync();
+
+               var satuans = await Database.Table<Satuan>().ToListAsync();
+                var q = from a in barangs
+                        join b in satuans on a.Id equals b.Id into g
+                        from b in g.DefaultIfEmpty()
+                        select new Barang { Satuans = g.ToList(), Photo=a.Photo, Barcode = a.Barcode, Id = a.Id, Keterangan = a.Keterangan, Nama = a.Nama, Supplier = a.Supplier, SupplierId = a.SupplierId };
+
+                return q.ToList();
             }
             catch (Exception ex)
             {

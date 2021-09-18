@@ -5,14 +5,17 @@ using System.Linq;
 
 namespace MainApp.Models
 {
-    public class Pembelian:BaseEntity
+    public class Pembelian:BaseNotify
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+
 
         private int supplierId;
-
-        [Indexed]
 
         public int SupplierId
         {
@@ -50,6 +53,7 @@ namespace MainApp.Models
 
 
         private double total;
+        private int _id;
 
         [Ignore]
         public double Total

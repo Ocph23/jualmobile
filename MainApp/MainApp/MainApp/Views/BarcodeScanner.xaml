@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             x:Class="MainApp.Views.BarcodeScanner">
+    <ContentPage.Content>
+        <Frame>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid>
+
+                    <zxing:ZXingScannerView x:Name="scanView" 
+                                        ScanResultCommand="{Binding ScanningCommand}"
+                                        IsScanning="{Binding IsScanning}"
+                                        WidthRequest="300"
+                                        HeightRequest="300"
+                                        VerticalOptions="CenterAndExpand"
+                                        HorizontalOptions="CenterAndExpand"/>
+                    <zxing:ZXingDefaultOverlay TopText="Harus Dalam Frame" ShowFlashButton="True" FlashButtonClicked="zXingDefaultOverlay_FlashButtonClicked" />
+                </Grid>
+
+                <Label Grid.Row="1" Margin="20" FontSize="20" HorizontalOptions="CenterAndExpand" TextColor="DarkOrange" Text="{Binding TextResult}"/>
+
+                <StackLayout Grid.Row="2" Orientation="Horizontal" IsVisible="{Binding ScanAgain}">
+                    <Button Margin="10"  HorizontalOptions="CenterAndExpand" Text="Reset" Command="{Binding ScanAgainCommand}" ></Button>
+                    <Button  Margin="10"  HorizontalOptions="CenterAndExpand" Text="OK" Command="{Binding TakeCommand}" ></Button>
+                </StackLayout>
+                <Button Margin="10" Grid.Row="2"  HorizontalOptions="CenterAndExpand" Text="Keluar" Command="{Binding CancalCommand}" ></Button>
+            </Grid>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

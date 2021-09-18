@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MainApp.Views.Barangs"
+             xmlns:model="clr-namespace:MainApp.Models"
              Title="{Binding Title}"
              x:Class="MainApp.Views.Barangs.AddBarangPage">
 
@@ -9,17 +10,45 @@
         <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Frame CornerRadius="10" Margin="10">
-                <StackLayout>
+        <Frame Margin="5" CornerRadius="10">
+            <ScrollView>
+                <StackLayout >
+                    <Label Margin="0,10,0,0" Text="Supplier" FontSize="Micro"></Label>
+                    <Picker ItemsSource="{Binding Suppliers, Mode=TwoWay}" ItemDisplayBinding="{Binding Nama}"   SelectedItem="{Binding Model.Supplier, Mode=TwoWay}"/>
                     <Label Margin="0,10,0,0" Text="Nama Barang" FontSize="Micro"></Label>
                     <Entry Text="{Binding Model.Nama}" ></Entry>
-
                     <Label Margin="0,10,0,0"  Text="Keterangan" FontSize="Micro"></Label>
-                    <Editor HeightRequest="100" Text="{Binding Model.Alamat}" ></Editor>
+                    <Editor HeightRequest="70" Text="{Binding Model.Keterangan}" ></Editor>
+                    <Label Margin="0,10,0,0" Text="Barcode" FontSize="Micro"></Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackLayout x:DataType="vm:AddBarangViewModel">
+                            <Entry Text="{Binding Model.Barcode}" ></Entry>
+                        </StackLayout>
+                        <ImageButton Grid.Column="1" VerticalOptions="Center" Command="{Binding ScanCommand}"  Source="scan.png" Padding="5" Margin="5" WidthRequest="40" HeightRequest="40" />
+                    </Grid>
+                    <StackLayout Margin="20,0" Orientation="Horizontal">
+                        <Label Margin="0,10,0,0" HorizontalOptions="Start" Text="Gambar" FontSize="Micro"></Label>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                            <ImageButton Background="silver" CornerRadius="3" Padding="3" WidthRequest="30" HeightRequest="30" 
+                                                 BackgroundColor="Transparent" Aspect="AspectFit"  Source="folder.png" 
+                                                 Command="{Binding FolderCommand}" 
+                                                 CommandParameter="{Binding .}" ></ImageButton>
+                            <ImageButton Background="silver" CornerRadius="3" Padding="3" WidthRequest="30" HeightRequest="30" BackgroundColor="Transparent" Aspect="AspectFit" 
+                                                 Source="camera.png" Command="{Binding CameraCommand}" 
+                                                 CommandParameter="{Binding .}" ></ImageButton>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout >
+                        <Image HeightRequest="200"  WidthRequest="320" Aspect="AspectFill" HorizontalOptions="CenterAndExpand" Source="{Binding ImagePreview}"></Image>
+                    </StackLayout>
+                    <Button IsVisible="{Binding ShowSatuan}" Command="{Binding ShowSatuanCommand}" Margin="10" Text="Lihat Satuan"></Button>
+
                 </StackLayout>
-            </Frame>
-                <Button IsVisible="{Binding ShowSatuan}" Command="{Binding ShowSatuanCommand}" Margin="10" Text="Lihat Satuan"></Button>
-        </StackLayout>
+            </ScrollView>
+        </Frame>
     </ContentPage.Content>
 </ContentPage>

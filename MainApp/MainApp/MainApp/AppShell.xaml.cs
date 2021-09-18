@@ -1,5 +1,6 @@
 ﻿using MainApp.ViewModels;
 using MainApp.Views;
+using MainApp.Views.Barangs;
 using MainApp.Views.Pembelians;
 using MainApp.Views.Suppliers;
 using System;
@@ -13,10 +14,9 @@ namespace MainApp
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
-            Routing.RegisterRoute(nameof(PembelianPage), typeof(PembelianPage));
-            Routing.RegisterRoute(nameof(SupplierPage), typeof(SupplierPage));
+           // Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
+           Routing.RegisterRoute(nameof(AddBarangPage), typeof(AddBarangPage));
+           Routing.RegisterRoute(nameof(AddPembelianPage), typeof(AddPembelianPage));
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

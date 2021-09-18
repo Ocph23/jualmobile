@@ -15,16 +15,16 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <SearchBar Text="{Binding SearchText}"></SearchBar>
-            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" 
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsBusy}" 
              Command="{Binding RefreshCommand}">
-                <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
+                <CollectionView Margin="10" ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView >
                                 <SwipeView.RightItems>
                                     <SwipeItems >
                                         <SwipeItemView >
-                                            <StackLayout VerticalOptions="CenterAndExpand" Margin="5">
+                                            <StackLayout VerticalOptions="CenterAndExpand" Margin="0">
                                                 <Button Text="Edit" BackgroundColor="Orange" HeightRequest="35" Padding="2"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BarangViewModel}}, Path=EditCommand}"		
                                                             CommandParameter="{Binding .}"/>
@@ -40,7 +40,7 @@
                                     <SwipeItems >
                                         <SwipeItemView >
                                             <StackLayout VerticalOptions="CenterAndExpand" Margin="5">
-                                                <Button Text="Satuan" BackgroundColor="ForestGreen" HeightRequest="35" Padding="2"
+                                                <Button Text="Satuan" BackgroundColor="Orange" Padding="2"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BarangViewModel}}, Path=ShowSatuanCommand}"		
                                                             CommandParameter="{Binding .}"/>
                                             </StackLayout>
@@ -48,10 +48,10 @@
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <!-- Content -->
-                                <StackLayout  Padding="5">
-                                    <Frame CornerRadius="10" Margin="2">
+                                <StackLayout  Padding="2">
+                                    <Frame CornerRadius="10" >
                                         <StackLayout>
-                                            <Label>
+                                            <Label Style="{x:DynamicResource content}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span Text="("></Span>
@@ -61,7 +61,10 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label Text="{Binding Keterangan}" FontSize="Micro" ></Label>
+                                            <StackLayout Orientation="Horizontal" >
+                                                <Label Style="{x:DynamicResource title}" Margin="0,0,30,0" Text="{Binding Keterangan}" HorizontalOptions="StartAndExpand" FontSize="Micro" ></Label>
+                                                <Label MinimumWidthRequest="200" Style="{x:DynamicResource title}" HorizontalOptions="EndAndExpand" Text="{Binding Satuans[0].HargaJual, StringFormat='Rp. {0:N0}'}" FontSize="Small" ></Label>
+                                            </StackLayout>
 
                                         </StackLayout>
                                     </Frame>

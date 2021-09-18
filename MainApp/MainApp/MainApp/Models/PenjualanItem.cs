@@ -3,10 +3,17 @@ using System;
 
 namespace MainApp.Models
 {
-    public class PenjualanItem
+    public class PenjualanItem   :BaseNotify
     {
+        private int id;
+
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int Id
+        {
+            get { return id; }
+            set { SetProperty(ref id, value); }
+        }
+
 
         [Indexed]
         public int PenjualanId { get; set; }
@@ -18,13 +25,48 @@ namespace MainApp.Models
         public int SatuanId { get; set; }
 
         public double Harga { get; set; }
-        public double Jumlah { get; set; }
+
+        private double jumlah;
+
+        public double Jumlah
+        {
+            get { return jumlah; }
+            set
+            {
+                SetProperty(ref jumlah, value);
+                Total = Harga * Jumlah;
+            }
+        }
 
         [Ignore]
         public Barang Barang { get; set; }
 
+        private Satuan satuan;
+
         [Ignore]
-        public Satuan Satuan { get; set; }
+        public Satuan Satuan
+        {
+            get { return satuan; }
+            set
+            {
+                SetProperty(ref satuan, value);
+                if (value != null)
+                {
+                    Harga = value.HargaBeli;
+                    SatuanId = value.Id;
+                    Total = Harga * Jumlah;
+                }
+            }
+        }
+
+        private double total;
+
+        [Ignore]
+        public double Total
+        {
+            get { return total = Harga * Jumlah; }
+            set { SetProperty(ref total, value); }
+        }
 
     }
 }

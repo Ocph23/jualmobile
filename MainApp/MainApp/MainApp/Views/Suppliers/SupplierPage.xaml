@@ -4,6 +4,7 @@
              x:Class="MainApp.Views.Suppliers.SupplierPage"
              xmlns:vm="clr-namespace:MainApp.Views.Suppliers"
              xmlns:model="clr-namespace:MainApp.Models"
+            
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png" Command="{Binding AddNewSupplier}"/>
@@ -11,12 +12,12 @@
     
     <ContentPage.Content>
         <Grid>
-            <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"  
              Command="{Binding RefreshCommand}">
                 <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <SwipeView >
+                            <SwipeView  >
                                 <SwipeView.RightItems>
                                     <SwipeItems >
                                         <SwipeItemView >
@@ -32,19 +33,16 @@
                                     </SwipeItems>
                                 </SwipeView.RightItems>
                                 <!-- Content -->
-                                <StackLayout Padding="2">
-                                    <Frame CornerRadius="10" Margin="10">
-                                        <StackLayout>
-                                            <Label Text="{Binding Id, StringFormat='{0:D5}'}" HorizontalOptions="End" ></Label>
-
-                                            <Label Text="Nama Supplier" FontSize="Micro"></Label>
-                                            <Label Text="{Binding Nama}" ></Label>
-
-                                            <Label Text="Kontak" FontSize="Micro"></Label>
-                                            <Label Text="{Binding Kontak}" ></Label>
-
-                                            <Label Text="Alamat" FontSize="Micro"></Label>
-                                            <Label Text="{Binding Alamat}" ></Label>
+                                <StackLayout Padding="2"   >
+                                    <Frame CornerRadius="10"  HasShadow="True" >
+                                        <StackLayout >
+                                            <Label Style="{x:DynamicResource content}" Text="{Binding Id, StringFormat='{0:D5}'}" HorizontalOptions="End" ></Label>
+                                            <Label Style="{x:DynamicResource title}" Text="Nama Supplier" FontSize="Micro"></Label>
+                                            <Label Style="{x:DynamicResource content}" Text="{Binding Nama}" ></Label>
+                                            <Label Style="{x:DynamicResource title}" Text="Alamat" FontSize="Micro"></Label>
+                                            <Label Style="{x:DynamicResource content}" Text="{Binding Alamat}" ></Label>
+                                            <Label Style="{x:DynamicResource content}" Text="{Binding Kontak}" ></Label>
+                                           
                                         </StackLayout>
                                     </Frame>
                                 </StackLayout>

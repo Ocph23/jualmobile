@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MainApp.Views.Pembelians.PembelianPage" 
+             xmlns:vm="clr-namespace:MainApp.Views.Pembelians"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
@@ -15,11 +16,11 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                             <StackLayout Padding="2">
-                                <Frame CornerRadius="10" Margin="10">
+                                <Frame CornerRadius="10" >
                                     <StackLayout>
-                                        <Label HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy}'}"/>
-                                        <Label Text="{Binding Supplier.Nama}" FontSize="Medium"></Label>
-                                        <Label >
+                                        <Label Style="{x:DynamicResource title}" HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                        <Label Style="{x:DynamicResource title}" Text="{Binding Supplier.Nama}" ></Label>
+                                        <Label Style="{x:DynamicResource content}">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Rp. "></Span>
@@ -27,8 +28,12 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        
+                                      
                                     </StackLayout>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer  Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PembelianViewModel}}, Path=PembelianDetailCommand}"		
+                                                            CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
                                 </Frame>
                             </StackLayout>
                     </DataTemplate>

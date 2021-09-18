@@ -16,7 +16,7 @@
                     <Label Margin="0,10,0,0" Text="Jumlah" FontSize="Micro"></Label>
                     <Entry Text="{Binding Model.Quantity}" ></Entry>
                     
-                    <Label Margin="0,10,0,0" Text="Nama Barang" FontSize="Micro"></Label>
+                    <Label Margin="0,10,0,0" Text="Nama Satuan" FontSize="Micro"></Label>
                     <Entry Text="{Binding Model.Nama}" ></Entry>
 
                     <Label Margin="0,10,0,0" Text="Beli" FontSize="Micro"></Label>

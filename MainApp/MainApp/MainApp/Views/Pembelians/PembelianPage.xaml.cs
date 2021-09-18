@@ -36,6 +36,7 @@ namespace MainApp.Views.Pembelians
         public ObservableCollection<Pembelian> Items { get; set; } = new ObservableCollection<Pembelian>();
         public Command AddCommand { get; }
         public Command RefreshCommand { get; }
+        public Command PembelianDetailCommand { get; }
 
         private bool isRefreshing;
         public bool IsRefreshing
@@ -51,7 +52,7 @@ namespace MainApp.Views.Pembelians
             {
                 var page = new AddPembelianPage();
                 AppShell.Current.Navigation.PushAsync(page);
-                var vm = page.BindingContext as AddPembelianViewModel;
+                //var vm = page.BindingContext as AddPembelianViewModel;
               
             });
             RefreshCommand = new Command(async () => {
@@ -76,6 +77,17 @@ namespace MainApp.Views.Pembelians
                 }
 
             });
+
+
+            PembelianDetailCommand = new Command(PembelianDetailAction);
+        }
+
+        private void PembelianDetailAction(object obj)
+        {
+            var pembelian = (Pembelian)obj;
+
+            Shell.Current.Navigation.PushAsync(new AddPembelianPage(pembelian));
+
         }
     }
 }

@@ -38,12 +38,7 @@ namespace MainApp.Views.Barangs
         public Command EditCommand { get; }
         public Command DeleteCommand { get; }
         public Command RefreshCommand { get; }
-        private bool isRefreshing;
-        public bool IsRefreshing
-        {
-            get { return isRefreshing; }
-            set { SetProperty(ref isRefreshing, value); }
-        }
+       
 
         private List<Barang> datas;
         private string searchText;
@@ -121,9 +116,9 @@ namespace MainApp.Views.Barangs
         {
             try
             {
-                //var supplier = new Barang { Nama = "Barang A", Alamat = "Jln. Sudirman ", Kontak = "08114810279" };
-                //await BarangStore.AddItemAsync(supplier);
-                IsRefreshing = true;
+                if (IsBusy)
+                    return;
+                IsBusy = true;
                 datas = await BarangStore.GetItemsAsync();
                 Items.Clear();
                 foreach (var item in datas)
@@ -133,12 +128,12 @@ namespace MainApp.Views.Barangs
             }
             catch (Exception ex)
             {
-                IsRefreshing = false;
+                IsBusy = false;
                 throw new SystemException(ex.Message);
             }
             finally
             {
-                IsRefreshing = false;
+                IsBusy = false;
             }
         }
 

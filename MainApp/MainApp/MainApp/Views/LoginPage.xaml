@@ -7,8 +7,14 @@
              x:Class="MainApp.Views.LoginPage"
              Shell.NavBarIsVisible="False">
     <ContentPage.Content>
-        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
-        </StackLayout>
+        <Frame>
+            <StackLayout Padding="30" VerticalOptions="Center">
+                <Label Style="{x:DynamicResource content}" Text="Login" FontSize="Title"></Label>
+                <Entry  Placeholder="User Name" Text="{Binding Model.UserName}"/>
+                <Entry Placeholder="Password" IsPassword="True"  Text="{Binding Model.Password}"/>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+                <Button Margin="0, 20" VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+            </StackLayout>
+        </Frame>
     </ContentPage.Content>
 </ContentPage>

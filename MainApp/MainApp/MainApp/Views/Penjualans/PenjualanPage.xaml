@@ -9,17 +9,40 @@
 
     <ContentPage.Content>
         <Grid>
-            <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Frame Background="#A338E6" Grid.Column="0" Padding="10" Margin="2" >
+                    <DatePicker Format="dd-MM-yyyy" Date="{Binding DateStart}" />
+                </Frame>
+                <Frame Background="#A338E6" Grid.Column="1" Padding="10" Margin="2" >
+                    <DatePicker Format="dd-MM-yyyy" Date="{Binding DateEnd}"/>
+                </Frame>
+
+
+                <ImageButton Command="{Binding RefreshCommand}" Grid.Column="2" Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+
+            </Grid>
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" 
              Command="{Binding RefreshCommand}">
                 <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="2">
-                                <Frame CornerRadius="10" Margin="10">
+                                <Frame CornerRadius="10" >
                                     <StackLayout>
-                                        <Label HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy}'}"/>
-                                        <Label Text="{Binding Supplier.Nama}" FontSize="Medium"></Label>
-                                        <Label >
+                                        <Label Style="{x:DynamicResource title}" HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy HH:mm:ss}'}"/>
+                                        <Label Style="{x:DynamicResource title}" Text="{Binding Pelanggan}" ></Label>
+                                        <Label Style="{x:DynamicResource content}" >
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Rp. "></Span>
@@ -35,6 +58,20 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
+            <Frame Grid.Row="2" Background="#A338E6">
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource title}" Text="Jumlah Transaksi"></Label>
+                        <Label Style="{StaticResource title}" Text="{Binding Transaksi}" HorizontalOptions="EndAndExpand"></Label>
+                        
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource title}" Text="Total Penjualan"></Label>
+                        <Label Style="{StaticResource title}" Text="{Binding TotalPenjualan, StringFormat='Rp. {0:N}'}" HorizontalOptions="EndAndExpand"></Label>
+
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
         </Grid>
-        </ContentPage.Content>
+    </ContentPage.Content>
 </ContentPage>

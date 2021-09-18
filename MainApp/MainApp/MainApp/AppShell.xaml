@@ -6,7 +6,7 @@
        xmlns:barang="clr-namespace:MainApp.Views.Barangs"
        xmlns:pembelian="clr-namespace:MainApp.Views.Pembelians"
        xmlns:penjualan="clr-namespace:MainApp.Views.Penjualans"
-       Title="MainApp"
+       Title="MainApp" Background="red"
        x:Class="MainApp.AppShell">
 
     <!--
@@ -82,33 +82,36 @@
         FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
         https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
     -->
-
+    <Shell.FlyoutHeader>
+        <StackLayout BackgroundColor="LightGray">
+            <Frame HeightRequest="150" >
+            <Label x:Name="user" Text="KIOS KITA" FontAttributes="Bold"  FontSize="18" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+            </Frame>
+        </StackLayout>
+    </Shell.FlyoutHeader>
 
     <FlyoutItem Title="About" Icon="icon_about.png">
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
     </FlyoutItem>
 
 
-    <FlyoutItem Title="Supplier" Icon="icon_about.png">
+    <FlyoutItem Title="Supplier" Icon="supplier.png">
         <ShellContent Route="SupplierPage" ContentTemplate="{DataTemplate supplier:SupplierPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Barang" Icon="icon_about.png">
+    <FlyoutItem Title="Barang" Icon="merchandise.png">
         <ShellContent Route="BarangPage" ContentTemplate="{DataTemplate barang:BarangPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Penjualan" Icon="icon_about.png">
+    <FlyoutItem Title="Penjualan" Icon="sell.png">
         <ShellContent Route="PenjualanPage" ContentTemplate="{DataTemplate penjualan:PenjualanPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Pembelian" Icon="icon_about.png">
+    <FlyoutItem Title="Pembelian" Icon="buy.png">
         <ShellContent Route="PembelianPage" ContentTemplate="{DataTemplate pembelian:PembelianPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Browse" Icon="icon_feed.png">
-        <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
-    </FlyoutItem>
-
+  
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
-    <MenuItem Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">
+    <MenuItem IconImageSource="logout.png" Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">
     </MenuItem>
 
     <!--
@@ -122,37 +125,5 @@
         <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
     </TabBar>
 
-    <!-- Optional Templates 
-    // These may be provided inline as below or as separate classes.
-
-    // This header appears at the top of the Flyout.
-    // https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#flyout-header
-    <Shell.FlyoutHeaderTemplate>
-        <DataTemplate>
-            <Grid>ContentHere</Grid>
-        </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
-
-    // ItemTemplate is for ShellItems as displayed in a Flyout
-    // https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#define-flyoutitem-appearance
-    <Shell.ItemTemplate>
-        <DataTemplate>
-            <ContentView>
-                Bindable Properties: Title, Icon
-            </ContentView>
-        </DataTemplate>
-    </Shell.ItemTemplate>
-
-    // MenuItemTemplate is for MenuItems as displayed in a Flyout
-    // https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#define-menuitem-appearance
-    <Shell.MenuItemTemplate>
-        <DataTemplate>
-            <ContentView>
-                Bindable Properties: Text, Icon
-            </ContentView>
-        </DataTemplate>
-    </Shell.MenuItemTemplate>
-
-    -->
 
 </Shell>

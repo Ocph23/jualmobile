@@ -3,7 +3,7 @@ using System;
 
 namespace MainApp.Models
 {
-    public class PembelianItem :BaseEntity
+    public class PembelianItem :BaseNotify
     {
         private int id;
 
@@ -14,7 +14,6 @@ namespace MainApp.Models
             set { SetProperty(ref id , value); }
         }
 
-
         [Indexed]
         public int PembelianId { get; set; }
         
@@ -23,8 +22,17 @@ namespace MainApp.Models
         
         [Indexed]
         public int SatuanId { get; set; }
-        
-        public double Harga {get;set;}
+
+
+
+        private double harga;
+
+        public double Harga
+        {
+            get { return harga; }
+            set { SetProperty(ref harga , value); }
+        }
+
 
         private double jumlah;
 
@@ -37,10 +45,13 @@ namespace MainApp.Models
             }
         }
 
+
         [Ignore]
         public Barang Barang {get;set;}
 
+
         private Satuan satuan;
+
 
         [Ignore]
         public Satuan Satuan
@@ -61,7 +72,7 @@ namespace MainApp.Models
         [Ignore]
         public double Total
         {
-            get { return total= Harga * Jumlah ; }
+            get { return total = Harga * Jumlah ; }
             set { SetProperty(ref total , value); }
         }
 

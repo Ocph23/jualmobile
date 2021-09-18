@@ -2,9 +2,11 @@
 using MainApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -28,8 +30,16 @@ namespace MainApp.Views.Barangs
 
     public class AddBarangViewModel : BaseViewModel
     {
-        public Barang Model { get; }
+        private Barang barang;
+
+        public Barang Model
+        {
+            get { return barang; }
+            set { SetProperty(ref barang , value); }
+        }
+        public ObservableCollection<Supplier> Suppliers { get; set; } = new ObservableCollection<Supplier>();
         public Command ShowSatuanCommand { get; private set; }
+        public Command ScanCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
         public AddBarangViewModel()
@@ -42,24 +52,46 @@ namespace MainApp.Views.Barangs
         public AddBarangViewModel(Barang model)
         {
             Title = "Edit Barang";
-            Model = model;
+          
+            Barcode = model.Barcode;
+            if (!string.IsNullOrEmpty(model.Photo))
+            {
+                ImagePreview = ImageSource.FromFile(model.Photo);
+            }
             Load();
+            Model = model;
         }
-
 
         void Load()
         {
+            FolderCommand = new Command(FolderAction);
+            CameraCommand = new Command(CameraAction);
+
+            var suppliers = SupplierStore.GetItemsAsync().Result;
+
+            Suppliers.Clear();
+            foreach (var item in suppliers)
+            {
+                Suppliers.Add(item);
+            }
+
 
             ShowSatuanCommand = new Command(async () => {
                 var page = new SatuanPage(Model);
                await AppShell.Current.Navigation.PushAsync(page);
                 var vm = page.BindingContext as SatuanViewModel;
             });
+            ScanCommand = new Command(() => {
 
+                Model.Keterangan = "Kterangan";
+                var page = new BarcodeScanner();
+                AppShell.Current.Navigation.PushModalAsync(page);
+                var vm = page.BindingContext as BarcodeScannerViewModel;
+                vm.OnResultScanHandler += Vm_OnResultScanHandler1;
+            });
 
             SaveCommand = new Command(async () =>
             {
-
                 try
                 {
                     if (string.IsNullOrEmpty(Model.Nama))
@@ -87,7 +119,9 @@ namespace MainApp.Views.Barangs
                     }
                     else
                     {
+                        ShowSatuan = true;
                         await Helper.InfoMessage("Data Berhasil Disimpan !");
+
                     }
                 }
                 catch (Exception ex)
@@ -98,6 +132,17 @@ namespace MainApp.Views.Barangs
             });
         }
 
+        private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+           
+        }
+
+        private Task Vm_OnResultScanHandler1(object obj)
+        {
+            Barcode = obj.ToString();
+            Model.Barcode = Barcode;
+            return Task.CompletedTask;
+        }
 
         private bool showSatuan;
 
@@ -106,6 +151,68 @@ namespace MainApp.Views.Barangs
             get { return Model.Id > 0 ? true:false; }
             set { SetProperty(ref showSatuan , value); }
         }
+
+
+        private string barCode;
+
+        public string Barcode
+        {
+            get { return barCode; }
+            set { SetProperty(ref barCode, value); }
+        }
+
+
+
+        private ImageSource  imagePreview;
+
+        public ImageSource ImagePreview
+        {
+            get { return imagePreview; }
+            set {SetProperty(ref imagePreview , value); }
+        }
+
+
+        private async void CameraAction(object obj)
+        {
+            var options = new MediaPickerOptions
+            {
+                Title = "Pilih File"             
+            };
+            var file = await MediaPicker.CapturePhotoAsync(options);
+            if (file != null)
+            {
+                Model.Photo = file.FullPath;
+                await RefreshPreview(file);
+            }
+
+        }
+        private async void FolderAction(object obj)
+        {
+            var options = new MediaPickerOptions
+            {
+                Title = "Pilih File"
+            };
+
+            var file = await MediaPicker.PickPhotoAsync(options);
+            if (file != null)
+            {
+                Model.Photo = file.FullPath;
+                await RefreshPreview(file);
+            }
+        }
+
+
+        Task RefreshPreview(FileResult result)
+        {
+            if (result != null)
+            {
+                ImagePreview = ImageSource.FromStream(x => result.OpenReadAsync());
+            }
+            return Task.CompletedTask;
+        }
+
+        public Command FolderCommand { get; set; }
+        public Command CameraCommand { get; set; }
 
     }
 }

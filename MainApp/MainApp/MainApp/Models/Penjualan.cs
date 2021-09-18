@@ -1,10 +1,11 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MainApp.Models
 {
-    public class Penjualan:BaseEntity
+    public class Penjualan:BaseNotify
     {
         private int id;
         [PrimaryKey, AutoIncrement]
@@ -14,7 +15,7 @@ namespace MainApp.Models
             set { SetProperty(ref id , value); }
         }
 
-        private DateTime tanggal;
+        private DateTime tanggal= DateTime.Now;
 
         public DateTime Tanggal
         {
@@ -23,6 +24,7 @@ namespace MainApp.Models
         }
 
         private string customer = "No Name";
+        private double total;
 
         public string Pelanggan
         {
@@ -30,7 +32,18 @@ namespace MainApp.Models
             set { customer = value; }
         }
 
-
+        [Ignore]
         public List<PenjualanItem> Items{get;set;}
+
+
+        [Ignore]
+        public double Total
+        {
+            get
+            {
+                return Items == null ? 0 : Items.Sum(x => x.Jumlah * x.Harga);
+            }
+            set { total = value; }
+        }
     }
 }

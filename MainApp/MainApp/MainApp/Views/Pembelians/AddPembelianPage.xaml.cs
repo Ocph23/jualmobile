@@ -31,11 +31,9 @@ namespace MainApp.Views.Pembelians
 
     public class AddPembelianViewModel : BaseViewModel
     {
-
         public ObservableCollection<PembelianItem> Items { get; set; } = new ObservableCollection<PembelianItem>();
         public ObservableCollection<Supplier> Suppliers{ get; set; } = new ObservableCollection<Supplier>();
-
-        public Pembelian Model { get; set; } = new Pembelian() { Items = new List<PembelianItem>() };
+        public Pembelian Model { get; set; } = new Pembelian() { Items = new List<PembelianItem>(), Tanggal=DateTime.Now };
         public Command SearchCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
@@ -55,17 +53,50 @@ namespace MainApp.Views.Pembelians
                 Suppliers.Add(item);
             }
 
-            SearchCommand = new Command(() => {
-                var page = new Helpers.CariBarangDialog();
-                AppShell.Current.Navigation.PushModalAsync(page);
+            SearchCommand = new Command(async () => {
+
+
+                if (Model.SupplierId <= 0)
+                {
+                    await Helper.ErrorMessage("Anda Belum Memilih Supplier !");
+                    return;
+                }
+
+                var page = new Helpers.CariBarangDialog(Model.SupplierId);
+                await AppShell.Current.Navigation.PushModalAsync(page);
                 var vm = page.BindingContext as Helpers.CariBarangDialogViewModel; ;
                 vm.onFoundItem += Vm_onFoundItem;
             });
 
-            SaveCommand = new Command(async () =>
+            SaveCommand = new Command( async () =>
             {
-                Model.Items = Items.ToList();
-               await PembelianStore.AddItemAsync(Model);
+                try
+                {
+                    if (Model.Supplier == null && Model.SupplierId <= 0)
+                        throw new SystemException("Supplier Harus Diisi !");
+
+                    Model.Items = Items.ToList();
+                    if(Model.Items==null ||Model.Items.Count<=0)
+                        throw new SystemException("Anda belum memilih barang  !");
+
+                    if (Model.Id <= 0)
+                    {
+                       var data =  await PembelianStore.AddItemAsync(Model);
+                        Model.Id = data;
+                    }
+                    else
+                    {
+                        await PembelianStore.UpdateItemAsync(Model);
+                    }
+
+                    await Helper.InfoMessage("Data Berhasil Disimpan !");
+                   await AppShell.Current.Navigation.PopAsync();
+                }
+                catch (Exception ex)
+                {
+                 await Helper.ErrorMessage(ex.Message);
+                }
+
             });
         }
 
@@ -79,14 +110,14 @@ namespace MainApp.Views.Pembelians
                     item.Jumlah += 1;
                     return;
                 }
-                if (barang.Satuans == null)
+                if (barang.Satuans == null || barang.Satuans.Count<=0)
                 {
                     barang.Satuans = await BarangStore.GetSatuans(barang.Id);
                     if (barang.Satuans == null || barang.Satuans.Count <= 0)
                         throw new SystemException("Barang Belum Memiliki Satuan !");
                 }
                 Items.Add(new PembelianItem { Barang = barang, Jumlah=1, Satuan = barang.Satuans.First(), BarangId = barang.Id, Harga = barang.Satuans.First().HargaBeli }); ;
-                await Helper.InfoMessage("Data Berhasil Disimpan !");
+                await Helper.InfoMessage("Barang Ditambahkan !");
             }
             catch (Exception ex)
             {
@@ -96,7 +127,16 @@ namespace MainApp.Views.Pembelians
 
         public AddPembelianViewModel(Pembelian model)
         {
+
+            Title = "Edit Pembelian";
             this.Model = model;
+
+            foreach (var item in model.Items)
+            {
+                Items.Add(item);
+            }
+
+            Load();
         }
     }
 }

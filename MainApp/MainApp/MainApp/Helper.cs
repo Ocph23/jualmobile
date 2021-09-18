@@ -1,14 +1,17 @@
-﻿using System;
+﻿using MainApp.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
+
+
+
 namespace MainApp
 {
   public  class Helper
     {
-
 
         public static Task InfoMessage(string message)
         {
@@ -19,6 +22,18 @@ namespace MainApp
         public static Task ErrorMessage(string message)
         {
             return Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+        }
+
+
+        public static async Task LongToas(string message)
+        {
+            var service = DependencyService.Get<IToas>();
+           await service.ShowLong(message);
+        }
+        public static async Task ShortToas(string message)
+        {
+            var service = DependencyService.Get<IToas>();
+            await service.ShowShort(message);
         }
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace MainApp.Models
 {
-    public class Satuan:BaseEntity
+    public class Satuan:BaseNotify
     {
         private int id;
 

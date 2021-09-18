@@ -2,74 +2,72 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:MainApp.Helpers"
+             xmlns:model ="clr-namespace:MainApp.Models"
+             xmlns:vm="clr-namespace:MainApp.Views.Pembelians"
              BackgroundColor="WhiteSmoke"
-              Title="{Binding Title}"
+             Title="{Binding Title}"
              x:Class="MainApp.Views.Pembelians.AddPembelianPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Frame >
-                <StackLayout>
-                    <Label Text="Kode" FontSize="Micro"/>
-                    <Entry/>
-
-                    <Label Text="Supplier" FontSize="Micro"/>
-                    <Picker ItemsSource="{Binding Suppliers}" ItemDisplayBinding="{Binding Nama}" SelectedItem="{Binding Model.Supplier}"/>
-
-                    <Label Text="Tanggal" FontSize="Micro"/>
-                    <DatePicker Date="{Binding Tanggal, StringFormat='dd MM yyyy'}"/>
-                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                        <Label Text="Cari barang" VerticalOptions="Center"/>
-                        <ImageButton VerticalOptions="Center" Command="{Binding SearchCommand}"  WidthRequest="40" Margin="3" Padding="10" HorizontalOptions="End" HeightRequest="40" Source="search.png"/>
+        <ScrollView>
+            <StackLayout>
+                <Frame >
+                    <StackLayout>
+                        <Label Text="Kode" FontSize="Micro"/>
+                        <Entry IsReadOnly="True" Text="{Binding Model.Id, StringFormat='{0:D5}'}"/>
+                        <Label Text="Supplier" FontSize="Micro"/>
+                        <Picker ItemsSource="{Binding Suppliers}" ItemDisplayBinding="{Binding Nama}" SelectedItem="{Binding Model.Supplier}"/>
+                        <Label Text="Tanggal" FontSize="Micro"/>
+                        <DatePicker Date="{Binding Model.Tanggal, StringFormat='{0:dd/MM/yyyy}'}"/>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <Label Text="Cari barang" VerticalOptions="Center"/>
+                            <ImageButton VerticalOptions="Center" Command="{Binding SearchCommand}"  WidthRequest="40" Margin="3" Padding="10" HorizontalOptions="End" HeightRequest="40" Source="search.png"/>
+                        </StackLayout>
                     </StackLayout>
-                </StackLayout>
-            </Frame>
-            <RefreshView>
-                <CollectionView ItemsSource="{Binding Items}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout Padding="10">
-                                <Frame CornerRadius="10">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <StackLayout  Padding="10" >
-                                            <Label Text="{Binding Barang.Nama}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="15" />
-                                            <Label LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="14" >
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Rp. "></Span>
-                                                        <Span Text="{Binding Satuan.HargaBeli, StringFormat='{}{0:N}'}"></Span>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-
-                                        </StackLayout>
-                                        <StackLayout Grid.Column="1">
-                                            <helpers:CustomStepper  ShowEntry="False" Text="{Binding Jumlah}" WidthRequest="120" HeightRequest="35"  Increment="1"  
-                                                                    Margin="5" VerticalOptions="CenterAndExpand"/>
-                                            <Picker Margin="0" ItemsSource="{Binding Barang.Satuans}" ItemDisplayBinding="{Binding Nama}" HeightRequest="32"
+                </Frame>
+                    <CollectionView ItemsSource="{Binding Items}" >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="5">
+                                    <Frame  CornerRadius="10">
+                                        <Grid x:DataType="model:PembelianItem">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout >
+                                                <Label Text="{Binding Barang.Nama}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="15" />
+                                                <Label LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="14" >
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Rp. " ></Span>
+                                                            <Span Text="{Binding Satuan.HargaBeli, StringFormat='{}{0:N}'}"></Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </StackLayout>
+                                            <StackLayout Grid.Column="1">
+                                                <helpers:CustomStepper WidthRequest="150" Text="{Binding Jumlah}"></helpers:CustomStepper>
+                                                <Picker Margin="0" ItemsSource="{Binding Barang.Satuans}" ItemDisplayBinding="{Binding Nama}" HeightRequest="32"
                                                     FontSize="12" HorizontalTextAlignment="Center"  SelectedItem="{Binding Satuan}"/>
-                                            <Label HorizontalOptions="CenterAndExpand" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="12" >
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Rp . "></Span>
-                                                        <Span Text="{Binding Jumlah,StringFormat='{}{0:N2}'}"></Span>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </StackLayout>
-                                    </Grid>
-                                </Frame>
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
-        </StackLayout>
+                                                <Label HorizontalOptions="CenterAndExpand" LineBreakMode="NoWrap" x:DataType="model:PembelianItem" Style="{DynamicResource ListItemTextStyle}" FontSize="12" >
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Rp . "></Span>
+                                                            <Span Text="{Binding Total,StringFormat='{}{0:N2}'}"></Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -1,10 +1,14 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace MainApp.Models
 {
-    public class Barang :BaseEntity
+    public class Barang :BaseNotify
     {
         private int id;
 
@@ -13,6 +17,15 @@ namespace MainApp.Models
         {
             get { return id; }
             set { SetProperty(ref id, value); }
+        }
+
+
+        private int supplierId;
+
+        public int SupplierId
+        {
+            get { return supplierId; }
+            set { SetProperty(ref supplierId , value); }
         }
 
 
@@ -39,11 +52,31 @@ namespace MainApp.Models
             set { SetProperty(ref barCode , value); }
         }
 
-
-
+        private string photo;
+        public string Photo
+        {
+            get { return photo; }
+            set { SetProperty(ref photo, value); }
+        }
 
 
         [Ignore]
         public List<Satuan> Satuans {get;set;}
+
+
+        private Supplier supplier;
+        [Ignore]
+
+        public Supplier Supplier
+        {
+            get { return supplier; }
+            set { SetProperty(ref supplier , value);
+                if (value != null)
+                {
+                    supplierId = value.Id;
+                }
+            }
+        }
+
     }
 }

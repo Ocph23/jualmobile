@@ -11,8 +11,10 @@ namespace MainApp.ViewModels
     {
         public AboutViewModel()
         {
-            Title = "About";
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
+            Title = "Welcome";
+            OpenWebCommand = new Command( () => {
+                UserName += "Test";
+            });
             Load();
 
         }
@@ -54,5 +56,15 @@ namespace MainApp.ViewModels
         }
 
         public ICommand OpenWebCommand { get; }
+
+        private string userName;
+
+        public string UserName
+        {
+            get { return userName; }
+            set { SetProperty(ref userName , value); }
+        }
+
+
     }
 }

@@ -14,6 +14,7 @@ namespace MainApp.Services
         Task<PenjualanItem> AddPenjualanItem(int barangId, PenjualanItem satuan);
         Task<List<PenjualanItem>> GetPenjualanItems(int barangId);
         Task<bool> EditPenjualanItem(PenjualanItem satuan);
+        Task<List<Penjualan>> GetItemsByDateAsync(DateTime dateStart, DateTime dateEnd);
     }
 
 
@@ -174,6 +175,34 @@ namespace MainApp.Services
             }
             catch (Exception ex)
             {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public async Task<List<Penjualan>> GetItemsByDateAsync(DateTime dateStart, DateTime dateEnd)
+        {
+            try
+            {
+                var datas = await Database.Table<Penjualan>().Where(x=>x.Tanggal >=dateStart && x.Tanggal <= dateEnd).ToListAsync();
+                if (datas == null)
+                    throw new SystemException("Data Tidak Ditemukan !");
+                foreach (var data in datas)
+                {
+                    data.Items = await Database.Table<PenjualanItem>().Where(x => x.PenjualanId == data.Id).ToListAsync();
+                    foreach (var item in data.Items)
+                    {
+                        item.Barang = await Database.Table<Barang>().Where(x => x.Id == item.BarangId).FirstOrDefaultAsync();
+                        item.Satuan = await Database.Table<Satuan>().Where(x => x.Id == item.SatuanId).FirstOrDefaultAsync();
+                    }
+                }
+
+
+                return datas;
+
+            }
+            catch (Exception ex)
+            {
+
                 throw new SystemException(ex.Message);
             }
         }

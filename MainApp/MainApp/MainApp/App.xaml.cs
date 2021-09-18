@@ -14,20 +14,29 @@ namespace MainApp
             InitializeComponent();
             var instance = DatabaseIntialization.Instance.GetAwaiter();
             DependencyService.Register<DatabaseIntialization>();
-            DependencyService.Register<MockDataStore>();
             DependencyService.Register<SupplierStore>();
             DependencyService.Register<BarangStore>();
             DependencyService.Register<PembelianStore>();
             DependencyService.Register<PenjualanStore>();
             DependencyService.Register<SupplierStore>();
-
-
             MessagingCenter.Subscribe<Page, MessageData>( this, "message", async (sender, arg) =>
             {
                 await MainPage.DisplayAlert(arg.Title, arg.Message, arg.OK, arg.Cancel);
             });
 
-            MainPage = new AppShell();
+            var profile = Account.GetProfile().Result;
+            if (profile == null)
+            {
+                MainPage = new  RegisterPage();
+            }
+            else
+            {
+                var user = Account.GetUser().Result;
+                if(user==null)
+                    MainPage = new  LoginPage();
+                else    
+                    MainPage = new AppShell();
+            }
         }
 
         protected override void OnStart()

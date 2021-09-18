@@ -53,13 +53,17 @@ namespace MainApp.Services
                 con.Rollback();
                 throw new SystemException(ex.Message);
             }
+            finally
+            {
+                con.Close();
+            }
         }
 
         public async Task<bool> DeleteItemAsync(int id)
         {
             var item = await GetItemAsync(id);
             var result = await Database.DeleteAsync(item);
-            return result > 0 ? true : false;
+            return result > 0;
         }
 
         public async Task<Pembelian> GetItemAsync(int id)
@@ -121,22 +125,14 @@ namespace MainApp.Services
 
         public async Task<bool> UpdateItemAsync(Pembelian item)
         {
-            var con = Database.GetConnection();
-            con.BeginTransaction();
             try
             {
-                var pembelianInserted = await Database.InsertOrReplaceAsync(item);
-                if (pembelianInserted > 0)
-                {
-                    var itemResult = await Database.InsertOrReplaceAsync(item.Items);
-
-                }
-                con.Commit();
-                return pembelianInserted > 0 ? true : false;
+                var itemResult = await Database.UpdateAsync(item);
+                itemResult = await Database.UpdateAllAsync(item.Items);
+                return itemResult > 0;
             }
             catch (Exception ex)
             {
-                con.Rollback();
                 throw new SystemException(ex.Message);
             }
         }
