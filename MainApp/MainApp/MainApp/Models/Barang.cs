@@ -78,5 +78,16 @@ namespace MainApp.Models
             }
         }
 
+
+        private int stock;
+
+        [Ignore]
+        public int Stock
+        {
+            get { 
+                return stock; }
+            set { SetProperty(ref stock , value); }
+        }
+
     }
 }

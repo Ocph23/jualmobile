@@ -2,6 +2,7 @@
 using MainApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,10 +46,49 @@ namespace MainApp.Views
 
         public event OnResultBarcode OnResultScanHandler;
 
+        public ObservableCollection<Satuan> Satuans { get; set; } = new ObservableCollection<Satuan>();
+
+        private Satuan satuanSelected;
+
+        public Satuan SatuanSelected
+        {
+            get { return satuanSelected; }
+            set { SetProperty(ref satuanSelected , value); 
+                if(value != null)
+                {
+                    Stock = stockSource / value.Quantity;
+                }
+            }
+        }
+
+
+        private bool showScan=true;
+
+        public bool ShowScan
+        {
+            get { return showScan; }
+            set { SetProperty(ref showScan , value); }
+        }
+
+
+
+
+        private int stock;
+
+        public int Stock
+        {
+            get { return stock; }
+            set { SetProperty(ref stock , value); }
+        }
+
+
+
+
+
         public BarcodePenjualanScannerViewModel()
         {
             ScanningCommand = new Command(ScanningAction, x => IsScanning);
-            ScanAgainCommand = new Command(() => { IsScanning = true; ScanAgain = false; TextResult = string.Empty; ImagePreview = null; BarangModel = null; });
+            ScanAgainCommand = new Command(() => { IsScanning = true; SatuanSelected = null; Stock = 0; ScanAgain = false; TextResult = string.Empty; ImagePreview = null; BarangModel = null; });
             TakeCommand = new Command(() =>
             {
                 Device.BeginInvokeOnMainThread(async () =>
@@ -91,7 +131,8 @@ namespace MainApp.Views
         public bool ScanAgain
         {
             get { return scanAgain; }
-            set { SetProperty(ref scanAgain, value); }
+            set { SetProperty(ref scanAgain, value);
+            }
         }
 
 
@@ -100,6 +141,8 @@ namespace MainApp.Views
         {
             await Task.Delay(1000);
             IsScanning = true;
+            SatuanSelected = null;
+            Stock = 0;
         }
 
 
@@ -125,23 +168,32 @@ namespace MainApp.Views
 
                             BarangModel = barangs.Where(x => x.Barcode == barcode).FirstOrDefault();
 
-
-
                             if (BarangModel == null)
+                            {
+                                await Task.Delay(1000);
+                                IsScanning = true;
+                                SatuanSelected = null;
+                                Stock = 0;
                                 throw new SystemException("Barang Tidak Ditemukan !");
+                            }
+
+                            ShowScan = false;
 
                             if (!string.IsNullOrEmpty(BarangModel.Photo))
                             {
                                 ImagePreview = ImageSource.FromFile(BarangModel.Photo); 
                             }
 
-
                             BarangModel.Satuans = await BarangStore.GetSatuans(BarangModel.Id);
-                            var satuan = BarangModel.Satuans.FirstOrDefault();
 
-
-
-                            //await Application.Current.MainPage.Navigation.PopModalAsync();
+                            Satuans.Clear();
+                            var satuansx = BarangModel.Satuans;
+                            foreach (var item in satuansx)
+                            {
+                                Satuans.Add(item);
+                            }
+                            stockSource = await BarangStore.GetStock(BarangModel.Id);
+                            SatuanSelected = satuansx.FirstOrDefault();
                         }
                         catch (Exception ex)
                         {
@@ -156,6 +208,7 @@ namespace MainApp.Views
                     finally
                     {
                         IsBusy = false;
+                       
                     }
                 });
 
@@ -210,5 +263,6 @@ namespace MainApp.Views
         private bool isAnalyzing;
         private List<Models.Barang> barangs;
         private ImageSource imagePreview;
+        private int stockSource;
     }
 }

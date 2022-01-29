@@ -14,6 +14,7 @@ namespace MainApp.Services
         Task<Satuan> AddSatuan(int barangId, Satuan satuan);
         Task<List<Satuan>> GetSatuans(int barangId);
         Task<bool> EditSatuan(Satuan satuan);
+        Task<int> GetStock(int barangId);
     }
 
 
@@ -123,6 +124,34 @@ namespace MainApp.Services
             {
                 throw new SystemException(ex.Message);
             }
+        }
+
+        public async Task<int> GetStock(int barangId)
+        {
+            try
+            {
+                var satuans = await Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
+
+                if (satuans == null || satuans.Count <= 0)
+                    throw new SystemException("Satuan Barang Belum Ada !");
+
+                var pembelian = from data in await Database.Table<PembelianItem>().Where(x => x.BarangId == barangId).ToListAsync()
+                                join satuan in await Database.Table<Satuan>().ToListAsync() on data.SatuanId equals satuan.Id
+                                select data.Jumlah * satuan.Quantity ;
+
+
+
+                var penjualan = from data in await Database.Table<PenjualanItem>().Where(x => x.BarangId == barangId).ToListAsync()
+                                join satuan in await Database.Table<Satuan>().ToListAsync() on data.SatuanId equals satuan.Id
+                                select data.Jumlah * satuan.Quantity;
+
+                return Convert.ToInt32((pembelian.Sum() - penjualan.Sum()));
+            }
+            catch (Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+
         }
     }
 }

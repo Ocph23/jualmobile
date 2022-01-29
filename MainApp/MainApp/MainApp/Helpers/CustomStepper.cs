@@ -156,4 +156,6 @@ namespace MainApp.Helpers
         }
 
     }
+
+    public delegate void JumlahChangeDelegate(object item);
 }

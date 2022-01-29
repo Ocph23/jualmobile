@@ -96,7 +96,7 @@ namespace MainApp.Views.Penjualans
         
         }
 
-        private DateTime dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private DateTime dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
         public DateTime DateStart
         {
