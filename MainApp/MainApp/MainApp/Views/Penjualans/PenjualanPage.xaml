@@ -14,22 +14,24 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Grid >
+            <Grid  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Frame Background="#A338E6" Grid.Column="0" Padding="10" Margin="2" >
+                <Frame Background="#A338E6" Grid.Column="0" Padding="0" Margin="1" >
                     <DatePicker Format="dd-MM-yyyy" Date="{Binding DateStart}" />
                 </Frame>
-                <Frame Background="#A338E6" Grid.Column="1" Padding="10" Margin="2" >
+                <Frame Background="#A338E6" Grid.Column="1" Padding="0" Margin="1" >
                     <DatePicker Format="dd-MM-yyyy" Date="{Binding DateEnd}"/>
                 </Frame>
 
-
-                <ImageButton Command="{Binding RefreshCommand}" Grid.Column="2" Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+                <StackLayout Grid.Column="2" Orientation="Horizontal">
+                    <ImageButton Command="{Binding RefreshCommand}"  Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+                    <ImageButton Command="{Binding ExportCommand}" IsVisible="{Binding ShowExport}"  Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+                </StackLayout>
 
             </Grid>
             <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" 
