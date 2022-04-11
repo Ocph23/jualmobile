@@ -1,6 +1,12 @@
-﻿using MainApp.Helpers;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using MainApp.Helpers;
+using MainApp.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -35,5 +41,10 @@ namespace MainApp
             var service = DependencyService.Get<IToas>();
             await service.ShowShort(message);
         }
+
+        
+
+
+      
     }
 }

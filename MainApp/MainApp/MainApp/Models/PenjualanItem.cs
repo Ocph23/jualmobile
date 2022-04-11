@@ -1,8 +1,11 @@
-﻿using SQLite;
+﻿using MainApp.Helpers;
+using SQLite;
 using System;
 
 namespace MainApp.Models
 {
+
+    
     public class PenjualanItem   :BaseNotify
     {
         private int id;
@@ -67,6 +70,9 @@ namespace MainApp.Models
             get { return total = Harga * Jumlah; }
             set { SetProperty(ref total, value); }
         }
+
+
+        public event JumlahChangeDelegate OnChangeJumlah;
 
     }
 }

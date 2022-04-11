@@ -15,6 +15,8 @@ namespace MainApp.Helpers
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CariBarangDialog : ContentPage
     {
+
+        
         public CariBarangDialog()
         {
             InitializeComponent();
@@ -48,7 +50,9 @@ namespace MainApp.Helpers
         public string Search
         {
             get { return search; }
-            set { SetProperty(ref search , value);
+            set
+            {
+                SetProperty(ref search, value);
                 if (!string.IsNullOrEmpty(value))
                 {
                     FilterData(value);
@@ -61,31 +65,45 @@ namespace MainApp.Helpers
         public bool IsRefreshing
         {
             get { return isRefreshing; }
-            set { SetProperty(ref isRefreshing , value); }
+            set { SetProperty(ref isRefreshing, value); }
         }
 
 
-        private void FilterData(string value)
+        private async void FilterData(string value)
         {
-            IsRefreshing = true;
-            if (datas == null)
-                RefreshCommand.Execute(null);
-
-           if (datas != null)
+            try
             {
-                Items.Clear();
+                if (IsRefreshing || string.IsNullOrEmpty(value))
+                    return;
 
-                var sources = datas.Where(x => x.Nama.ToLower().Contains(value.ToLower()));
-                if (supplierId > 0)
-                    sources = sources.Where(x => x.SupplierId == supplierId);
+                IsRefreshing = true;
+                if (datas == null)
+                    RefreshCommand.Execute(null);
 
-                foreach (var item in sources)
+                if (datas != null)
                 {
-                    Items.Add(item);
-                }
-            }
+                    Items.Clear();
 
-            IsRefreshing = false;
+                    var sources = datas.Where(x => x.Nama.ToLower().Contains(value.ToLower()));
+                    if (supplierId > 0)
+                        sources = sources.Where(x => x.SupplierId == supplierId);
+
+                    foreach (var item in sources)
+                    {
+                        if (item.Stock <= 0)
+                        {
+                            item.Stock = await BarangStore.GetStock(item.Id);
+                        }
+                        Items.Add(item);
+                    }
+                }
+
+                IsRefreshing = false;
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         public ObservableCollection<Barang> Items { get; set; } = new ObservableCollection<Barang>();
@@ -96,7 +114,7 @@ namespace MainApp.Helpers
         public Command OkCommand
         {
             get { return okCommand; }
-            set { SetProperty(ref okCommand , value); }
+            set { SetProperty(ref okCommand, value); }
         }
 
         public Command CancelCommand { get; set; }
@@ -115,7 +133,8 @@ namespace MainApp.Helpers
         private void Load()
         {
             RefreshCommand = new Command(async () => await Refresh());
-            SelectBarang = new Command((object obj) => {
+            SelectBarang = new Command((object obj) =>
+            {
                 SelectedItem = obj as Barang;
             });
             OkCommand = new Command(async () => await OkAction(), () => false);
@@ -124,7 +143,7 @@ namespace MainApp.Helpers
 
         private Task CancelAction()
         {
-           return AppShell.Current.Navigation.PopModalAsync();
+            return AppShell.Current.Navigation.PopModalAsync();
         }
 
         private Task OkAction()
@@ -144,7 +163,7 @@ namespace MainApp.Helpers
             }
             catch (Exception ex)
             {
-               await Helper.ErrorMessage(ex.Message);
+                await Helper.ErrorMessage(ex.Message);
             }
             finally
             {
@@ -161,8 +180,11 @@ namespace MainApp.Helpers
         public Barang SelectedItem
         {
             get { return selectedItem; }
-            set { SetProperty(ref selectedItem , value); OkCommand = new Command(async () => await OkAction(), () => true); }
+            set
+            {
+                SetProperty(ref selectedItem, value);
+                OkCommand = new Command(async () => await OkAction(), () => (value.Stock > 0));
+            }
         }
-
     }
 }

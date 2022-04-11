@@ -7,11 +7,11 @@
         <Frame>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Frame CornerRadius="20" Padding="4" Background="transparent">
+                <Frame CornerRadius="20" IsVisible="{Binding IsScanning}" HeightRequest="300" Padding="4" Background="transparent">
                     <Grid >
                         <zxing:ZXingScannerView x:Name="scanView"                                         ScanResultCommand="{Binding ScanningCommand}"
                                         IsScanning="{Binding IsScanning}"
@@ -20,16 +20,12 @@
                         <zxing:ZXingDefaultOverlay Margin="5"  TopText="Harus Dalam Frame" ShowFlashButton="True"  FlashButtonClicked="zXingDefaultOverlay_FlashButtonClicked" />
                     </Grid>
                 </Frame>
-
                 <Grid Grid.Row="1" Padding="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60*"/>
                             <ColumnDefinition Width="40*"/>
                         </Grid.ColumnDefinitions>
                         <StackLayout>
-                            <Label Style="{StaticResource title}" Text="Barcode"/>
-                            <Label Style="{StaticResource content}" Text="{Binding BarangModel.Barcode}"/>
-
                             <Label Style="{StaticResource title}" Text="ID Barang"/>
                             <Label Style="{StaticResource content}" Text="{Binding BarangModel.Id, StringFormat='{0:D8}'}"/>
 
@@ -47,12 +43,18 @@
 
                             <Label Style="{StaticResource title}" Text="Harga Beli"/>
                             <Label Style="{StaticResource content}" Text="{Binding BarangModel.Satuans[0].HargaBeli, StringFormat='Rp. {0:N}'}"/>
-
+                            
+                            <Label Style="{StaticResource title}" Text="Stock"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label VerticalTextAlignment="Center" Style="{StaticResource content}" Text="{Binding Stock}" Margin="0,0,10,0"/>
+                            <Picker VerticalTextAlignment="Center" WidthRequest="150" HorizontalOptions="StartAndExpand" ItemsSource="{Binding Satuans}" SelectedItem="{Binding SatuanSelected}" ItemDisplayBinding="{Binding Nama}"></Picker>
                         </StackLayout>
+
+                    </StackLayout>
                         <StackLayout Grid.Column="1"  >
                             <Image   Aspect="AspectFill" HorizontalOptions="CenterAndExpand"  Source="{Binding ImagePreview}"></Image>
-
-                        </StackLayout>
+                         <Label HorizontalOptions="CenterAndExpand" Style="{StaticResource content}" Text="{Binding BarangModel.Barcode}"/>
+                    </StackLayout>
                     </Grid>
 
                 <StackLayout Grid.Row="2" Orientation="Horizontal" IsVisible="{Binding ScanAgain}">

@@ -35,8 +35,18 @@ xmlns:vm="clr-namespace:MainApp.Helpers"
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Label Text="{Binding Keterangan}" FontSize="Micro" ></Label>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Stok : "></Span>
+                                                    <Span Text="{Binding Stock}"></Span>
+                                                    <Span Text=" "></Span>
+                                                    <Span Text="{Binding Satuans[0].Nama}"></Span>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
+                                        <Label Text="{Binding Keterangan}" FontSize="Micro" ></Label>
                                     </StackLayout>
                                 </Frame>
                                 <StackLayout.GestureRecognizers>

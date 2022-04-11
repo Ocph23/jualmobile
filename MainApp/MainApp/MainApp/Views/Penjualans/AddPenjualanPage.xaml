@@ -56,7 +56,7 @@ BackgroundColor="WhiteSmoke"
                                             </Label>
                                         </StackLayout>
                                         <StackLayout Grid.Column="1"  >
-                                            <helpers:CustomStepper  ShowEntry="False" Text="{Binding Jumlah}" WidthRequest="130" HeightRequest="35"  Increment="1"  
+                                            <helpers:CustomStepper ShowEntry="False" Text="{Binding Jumlah}" WidthRequest="130" HeightRequest="35"  Increment="1"  
                                                                     Margin="5" VerticalOptions="CenterAndExpand"/>
                                             <Picker Margin="0" ItemsSource="{Binding Barang.Satuans}" ItemDisplayBinding="{Binding Nama}" HeightRequest="32"
                                                     FontSize="12" HorizontalTextAlignment="Center"  SelectedItem="{Binding Satuan}"/>
@@ -83,7 +83,7 @@ BackgroundColor="WhiteSmoke"
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span  Text="Total Rp."></Span>
-                                <Span></Span>
+                                <Span Text="{Binding GrandTotal,StringFormat='{}{0:N2}'}"></Span>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

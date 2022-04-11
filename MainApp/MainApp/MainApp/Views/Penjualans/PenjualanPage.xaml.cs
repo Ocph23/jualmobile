@@ -1,14 +1,17 @@
-﻿using MainApp.Models;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
+using MainApp.Models;
+using MainApp.Services;
 using MainApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
 
 namespace MainApp.Views.Penjualans
 {
@@ -45,13 +48,50 @@ namespace MainApp.Views.Penjualans
                 var vm = page.BindingContext as AddPenjualanViewModel;
 
             });
+
+            ExportCommand = new Command(async (x) => {
+                await ExportAction();
+            }, x=>true);
+
+
             RefreshCommand = new Command( async (x)=> {
                 await RefreshAction();
             }, RefreshValidate);
 
+
+
+
+
             this.PropertyChanged += PenjualanViewModel_PropertyChanged;
 
             RefreshCommand.Execute(null);
+
+        }
+       
+        
+
+        private async Task ExportAction()
+        {
+           
+            var  excelService = new ExcelService();
+            var fileName = $"Penjualan-{Guid.NewGuid()}.xlsx";
+            string filepath = excelService.GenerateExcel(fileName);
+
+            var data = new ExcelStructure
+            {
+                From = DateStart, To = DateEnd,
+                Values = Items.ToList(),
+                Headers = new List<HeaderCell>() { new HeaderCell { Title="Tanggal" }, new HeaderCell { Title = "Pelanggan" }, new HeaderCell { Title = "Total" } }
+            };
+
+            excelService.InsertDataPenjualanIntoSheet(filepath, "Penjualan", data);
+
+            await Launcher.OpenAsync(new OpenFileRequest()
+            {
+                File = new ReadOnlyFile(filepath)
+            });
+
+
 
         }
 
@@ -73,6 +113,11 @@ namespace MainApp.Views.Penjualans
                         Items.Add(item);
                     }
 
+                    if (Items.Count > 0)
+                        ShowExport = true;
+                    else
+                        ShowExport = false;
+
 
                     Transaksi = Items.Count;
                     TotalPenjualan = Items.Sum(x => x.Total);
@@ -90,13 +135,33 @@ namespace MainApp.Views.Penjualans
             }
         }
 
+        private bool showExport;
+
+        public bool ShowExport
+        {
+            get { return showExport; }
+            set { SetProperty(ref showExport , value); }
+        }
+
+
+
+        private Command exportCommand;
+
+        public Command ExportCommand
+        {
+            get { return exportCommand; }
+            set { SetProperty(ref exportCommand , value); }
+        }
+
+
+
         private bool RefreshValidate(object arg)
         {
             return DateStart <= DateEnd;
         
         }
 
-        private DateTime dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private DateTime dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
         public DateTime DateStart
         {

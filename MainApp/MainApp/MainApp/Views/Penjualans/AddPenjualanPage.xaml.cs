@@ -34,6 +34,16 @@ namespace MainApp.Views.Penjualans
         public Command ScanCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
+        private double grandTotal;
+
+        public double GrandTotal
+        {
+            get { return grandTotal; }
+            set { SetProperty(ref grandTotal , value); }
+        }
+
+
+
         public AddPenjualanViewModel()
         {
             Title = "Buat Penjualan";
@@ -118,13 +128,20 @@ namespace MainApp.Views.Penjualans
                     };
 
                     Items.Add(item);
-               await Helper.LongToas("Barang Berhasil Ditambahkan !");
+
+
+
+
+                   await Helper.LongToas("Barang Berhasil Ditambahkan !");
                 }
                 else
                 {
                     itemPenjualan.Jumlah += 1;
                     await Helper.LongToas($"Barang {itemPenjualan.Barang.Nama} Bertambah 1 !");
                 }
+
+
+                GrandTotal = Items.Sum(x=>x.Total);
 
             }
             catch (Exception ex)
@@ -155,12 +172,27 @@ namespace MainApp.Views.Penjualans
                     if (barang.Satuans == null || barang.Satuans.Count <= 0)
                         throw new SystemException("Barang Belum Memiliki Satuan !");
                 }
-                Items.Add(new PenjualanItem { Barang = barang, Jumlah = 1, Satuan = barang.Satuans.First(), BarangId = barang.Id, Harga = barang.Satuans.First().HargaBeli }); ;
+                var itemData = new PenjualanItem { Barang = barang, Jumlah = 1, Satuan = barang.Satuans.First(), BarangId = barang.Id, Harga = barang.Satuans.First().HargaBeli };
+                itemData.PropertyChanged += ItemData_PropertyChanged;
+                Items.Add(itemData) ;
+
+                GrandTotal = Items.Sum(x => x.Total);
             }
             catch (Exception ex)
             {
                 await Helper.ErrorMessage(ex.Message);
             }
+        }
+
+        private void ItemData_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var item = (PenjualanItem)sender;
+            if (item != null)
+            {
+                item.Total = item.Jumlah * item.Harga;
+            }   
+
+             GrandTotal = Items.Sum(x => x.Total);
         }
 
         public AddPenjualanViewModel(Penjualan model)
