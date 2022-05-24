@@ -50,7 +50,7 @@ BackgroundColor="WhiteSmoke"
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span Text="Rp. "></Span>
-                                                        <Span Text="{Binding Satuan.HargaBeli, StringFormat='{}{0:N}'}"></Span>
+                                                        <Span Text="{Binding Satuan.HargaJual, StringFormat='{}{0:N}'}"></Span>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>

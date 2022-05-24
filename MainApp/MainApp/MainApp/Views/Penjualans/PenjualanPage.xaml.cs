@@ -81,7 +81,14 @@ namespace MainApp.Views.Penjualans
             {
                 From = DateStart, To = DateEnd,
                 Values = Items.ToList(),
-                Headers = new List<HeaderCell>() { new HeaderCell { Title="Tanggal" }, new HeaderCell { Title = "Pelanggan" }, new HeaderCell { Title = "Total" } }
+                Headers = new List<HeaderCell>() { 
+                    new HeaderCell { Title="Tanggal" }, 
+                    new HeaderCell { Title = "Kode" }, 
+                    new HeaderCell { Title = "Barang" }, 
+                    new HeaderCell { Title = "Jumlah" }, 
+                    new HeaderCell { Title = "Satuan" }, 
+                    new HeaderCell { Title = "Harga" }, 
+                    new HeaderCell { Title = "Total" } }
             };
 
             excelService.InsertDataPenjualanIntoSheet(filepath, "Penjualan", data);
@@ -171,7 +178,7 @@ namespace MainApp.Views.Penjualans
 
 
 
-        private DateTime dateEnd=DateTime.Now;
+        private DateTime dateEnd=DateTime.Now.AddHours(1);
 
         public DateTime DateEnd
         {

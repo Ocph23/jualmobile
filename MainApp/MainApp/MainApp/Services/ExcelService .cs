@@ -79,7 +79,7 @@ namespace MainApp.Services
                 var rowTitle = sheetData.AppendChild(new Row() { Height=100});
                 rowTitle.Append(new Cell()
                 {
-                    CellValue = new CellValue($"LAPORAN PENJUALAN {data.From.ToShortDateString()} - {data.To.ToShortDateString()}"),
+                    CellValue = new CellValue($"LAPORAN PENJUALAN {data.From.ToString("dd/MM/yyyy")} - {data.To.ToString("dd/MM/yyyy")}"),
                     DataType = new EnumValue<CellValues>(CellValues.String)
                 });
 
@@ -109,7 +109,7 @@ namespace MainApp.Services
                 if(lstColumns == null)
                 {
                     lstColumns = new Columns();
-                    lstColumns.AppendChild(new Column { Width=300 });
+                    lstColumns.AppendChild(new Column { Width=500 });
                 }
 
 
@@ -120,21 +120,53 @@ namespace MainApp.Services
                     dataRow.Append(new Cell()
                     {
                         CellValue = new CellValue(value.Tanggal.ToShortDateString()),
+                        StyleIndex = 1,
                         DataType = new EnumValue<CellValues>(GetCellType(value.Tanggal.ToShortDateString()))
                     });
 
                     dataRow.Append(new Cell()
                     {
-                        CellValue = new CellValue(value.Pelanggan),
+                        CellValue = new CellValue(value.Id.ToString("D6")),   
+                        StyleIndex = 1,
+                        
                         DataType = new EnumValue<CellValues>(GetCellType(value.Pelanggan))
                     });
 
-                    dataRow.Append(new Cell()
+                    foreach (var barang in value.Items)
                     {
-                        CellValue = new CellValue(value.Total),
-                        DataType = new EnumValue<CellValues>(GetCellType(value.Total))
-                    });
+                        dataRow.Append(new Cell()
+                        {
+                            CellValue = new CellValue(barang.Barang.Nama),
+                            StyleIndex = 1,
+                            DataType = new EnumValue<CellValues>(GetCellType(barang.Barang.Nama))
+                        });
+                        dataRow.Append(new Cell()
+                        {
+                            CellValue = new CellValue(barang.Jumlah),
+                            StyleIndex = 1,
+                            DataType = new EnumValue<CellValues>(GetCellType(barang.Jumlah))
+                        });
+                        dataRow.Append(new Cell()
+                        {
+                            CellValue = new CellValue(barang.Satuan.Nama),
+                            StyleIndex = 1,
+                            DataType = new EnumValue<CellValues>(GetCellType(barang.Satuan.Nama))
+                        });
 
+                        dataRow.Append(new Cell()
+                        {
+                            CellValue = new CellValue(barang.Satuan.HargaJual),
+                            StyleIndex = 1,
+                            DataType = new EnumValue<CellValues>(GetCellType(barang.Satuan.HargaJual))
+                        });
+
+                        dataRow.Append(new Cell()
+                        {
+                            CellValue = new CellValue(barang.Satuan.HargaJual * barang.Jumlah),
+                            StyleIndex = 1,
+                            DataType = new EnumValue<CellValues>(GetCellType(barang.Satuan.HargaJual))
+                        });
+                    }
                 }
                 wbPart.Workbook.Save();
             }

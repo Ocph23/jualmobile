@@ -130,11 +130,14 @@ namespace MainApp.Services
         {
             try
             {
+                var barang= await Database.Table<Barang>().Where(x => x.Id== barangId).FirstAsync();
                 var satuans = await Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
 
                 if (satuans == null || satuans.Count <= 0)
-                    throw new SystemException("Satuan Barang Belum Ada !");
-
+                {
+                   await Helper.ErrorMessage($"Satuan Barang({barang.Nama} ) Belum Ada !");
+                    return 0;
+                }
                 var pembelian = from data in await Database.Table<PembelianItem>().Where(x => x.BarangId == barangId).ToListAsync()
                                 join satuan in await Database.Table<Satuan>().ToListAsync() on data.SatuanId equals satuan.Id
                                 select data.Jumlah * satuan.Quantity ;

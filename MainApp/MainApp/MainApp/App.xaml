@@ -35,7 +35,7 @@
                     <Setter.Value>
                         <RadialGradientBrush Center="0.1,0.5" Radius="0.3">
                             <GradientStop Color="#DC87F5" Offset="0.1"/>
-                            <GradientStop Color="#9900F6" Offset="1.0"/>
+                            <GradientStop Color="#60408f" Offset="1.0"/>
                         </RadialGradientBrush>
                     </Setter.Value>
                 </Setter>

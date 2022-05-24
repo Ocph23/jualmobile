@@ -55,7 +55,7 @@ namespace MainApp.Models
                 SetProperty(ref satuan, value);
                 if (value != null)
                 {
-                    Harga = value.HargaBeli;
+                    Harga = value.HargaJual;
                     SatuanId = value.Id;
                     Total = Harga * Jumlah;
                 }

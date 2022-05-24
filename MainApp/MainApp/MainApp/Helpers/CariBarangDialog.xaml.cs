@@ -100,6 +100,10 @@ namespace MainApp.Helpers
 
                 IsRefreshing = false;
             }
+            catch (Exception ex)
+            {
+                Helper.ErrorMessage(ex.Message);
+            }
             finally
             {
                 IsRefreshing = false;
@@ -183,7 +187,7 @@ namespace MainApp.Helpers
             set
             {
                 SetProperty(ref selectedItem, value);
-                OkCommand = new Command(async () => await OkAction(), () => (value.Stock > 0));
+                OkCommand = new Command(async () => await OkAction(), () => (value!=null));
             }
         }
     }

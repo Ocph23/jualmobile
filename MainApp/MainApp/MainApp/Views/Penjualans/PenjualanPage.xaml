@@ -30,7 +30,7 @@
 
                 <StackLayout Grid.Column="2" Orientation="Horizontal">
                     <ImageButton Command="{Binding RefreshCommand}"  Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
-                    <ImageButton Command="{Binding ExportCommand}" IsVisible="{Binding ShowExport}"  Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+                    <ImageButton Command="{Binding ExportCommand}" IsVisible="{Binding ShowExport}"  Padding="2" Margin="2" Source="excelxlsicon.png" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
                 </StackLayout>
 
             </Grid>
