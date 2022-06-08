@@ -31,6 +31,7 @@ namespace MainApp.Views.Penjualans
 
         public Penjualan Model { get; set; } = new Penjualan() { Items = new List<PenjualanItem>() };
         public Command SearchCommand { get; private set; }
+        public Command DeleteItemCommand { get; private set; }
         public Command ScanCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
@@ -68,6 +69,14 @@ namespace MainApp.Views.Penjualans
                 vm.onFoundItem += Vm_onFoundItem;
             });
 
+
+
+            DeleteItemCommand = new Command(async (object obj)=> {
+                if (SelectedItem != null)
+                    Items.Remove(SelectedItem);
+
+            });
+
             ScanCommand = new Command(() =>
             {
                 var page = new BarcodePenjualanScanner();
@@ -78,7 +87,6 @@ namespace MainApp.Views.Penjualans
 
             SaveCommand = new Command(async () =>
             {
-
                 try
                 {
 
@@ -86,7 +94,16 @@ namespace MainApp.Views.Penjualans
                     if (Model.Items == null || Model.Items.Count <= 0)
                         throw new SystemException("Anda belum memilih barang  !");
 
-                    await PenjualanStore.AddItemAsync(Model);
+                    if(Model.Id <= 0)
+                    {
+                        await PenjualanStore.AddItemAsync(Model);
+                    }
+                    else
+                    {
+                        await PenjualanStore.UpdateItemAsync(Model);
+                    }
+
+
                     await Helper.InfoMessage("Data Berhasil Disimpan !");
                     await AppShell.Current.Navigation.PopAsync();
                 }
@@ -98,6 +115,17 @@ namespace MainApp.Views.Penjualans
             });
         }
 
+
+        private PenjualanItem selectedItem;
+
+        public PenjualanItem SelectedItem
+        {
+            get { return selectedItem; }
+            set {SetProperty(ref selectedItem , value); }
+        }
+
+
+
         private async Task Vm_OnResultScanHandler1(object obj)
         {
             try
@@ -105,6 +133,10 @@ namespace MainApp.Views.Penjualans
                 var barang = (Barang)obj;
                 if (barang == null)
                         throw new SystemException("Barang Tidak Ditemukan !");
+
+                if (barang.Stock <= 0)
+                    throw new SystemException("Stock Barang Tidak Ada !");
+
 
                 var itemPenjualan = Items.Where(x => x.Barang.Id== barang.Id).FirstOrDefault();
                 if (itemPenjualan == null)
@@ -157,6 +189,9 @@ namespace MainApp.Views.Penjualans
         {
             try
             {
+                if (barang.Stock <= 0)
+                    throw new SystemException("Stock Barang Tidak Ada !");
+
 
                 var item = Items.Where(x => x.BarangId == barang.Id).FirstOrDefault();
 

@@ -11,21 +11,21 @@
             <Frame CornerRadius="10" Margin="10">
                 <StackLayout>
                     <Label Text="Level" FontSize="Micro"></Label>
-                    <Entry Text="{Binding Model.Level}" ></Entry>
+                    <Entry Text="{Binding Model.Level}" Keyboard="Numeric" ></Entry>
 
                     <Label Margin="0,10,0,0" Text="Jumlah" FontSize="Micro"></Label>
-                    <Entry Text="{Binding Model.Quantity}" ></Entry>
+                    <Entry Text="{Binding Model.Quantity}" Keyboard="Numeric" ></Entry>
                     
                     <Label Margin="0,10,0,0" Text="Nama Satuan" FontSize="Micro"></Label>
                     <Entry Text="{Binding Model.Nama}" ></Entry>
 
                     <Label Margin="0,10,0,0" Text="Beli" FontSize="Micro"></Label>
-                    <Entry Text="{Binding Model.HargaBeli}" ></Entry>
+                    <Entry Text="{Binding Model.HargaBeli}" Keyboard="Numeric" ></Entry>
 
 
 
                     <Label Margin="0,10,0,0" Text="Jual" FontSize="Micro"></Label>
-                    <Entry Text="{Binding Model.HargaJual}" ></Entry>
+                    <Entry Text="{Binding Model.HargaJual}" Keyboard="Numeric" ></Entry>
                 </StackLayout>
             </Frame>
         </StackLayout>

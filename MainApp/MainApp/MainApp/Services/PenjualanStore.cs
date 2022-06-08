@@ -118,22 +118,14 @@ namespace MainApp.Services
 
         public async Task<bool> UpdateItemAsync(Penjualan item)
         {
-            var con = Database.GetConnection();
-            con.BeginTransaction();
             try
             {
-                var pembelianInserted = await Database.InsertOrReplaceAsync(item);
-                if (pembelianInserted > 0)
-                {
-                    var itemResult = await Database.InsertOrReplaceAsync(item.Items);
-
-                }
-                con.Commit();
-                return pembelianInserted > 0 ? true : false;
+                var itemResult = await Database.UpdateAsync(item);
+                itemResult = await Database.UpdateAllAsync(item.Items);
+                return itemResult > 0;
             }
             catch (Exception ex)
             {
-                con.Rollback();
                 throw new SystemException(ex.Message);
             }
         }

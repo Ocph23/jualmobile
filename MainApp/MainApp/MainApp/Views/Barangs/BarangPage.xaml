@@ -6,6 +6,7 @@
              x:Class="MainApp.Views.Barangs.BarangPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
+        <ToolbarItem IconImageSource="excelxlsicon.png"  Command="{Binding ExportCommand}"/>
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
@@ -17,7 +18,8 @@
             <SearchBar Text="{Binding SearchText}"></SearchBar>
             <RefreshView Grid.Row="1" IsRefreshing="{Binding IsBusy}" 
              Command="{Binding RefreshCommand}">
-                <CollectionView Margin="10" ItemsSource="{Binding Items}" EmptyView="No items to display" SelectedItem="{Binding SelectedItem}" >
+                <CollectionView Margin="10" ItemsSource="{Binding Items}" EmptyView="No items to display" 
+                                SelectedItem="{Binding SelectedItem}" >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView >
@@ -51,16 +53,28 @@
                                 <StackLayout  Padding="2">
                                     <Frame CornerRadius="10" >
                                         <StackLayout>
-                                            <Label Style="{x:DynamicResource content}">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="("></Span>
-                                                        <Span Text="{Binding Id, StringFormat='{0:D5}'}"></Span>
-                                                        <Span Text=")  "></Span>
-                                                        <Span Text="{Binding Nama}"></Span>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
+                                            <StackLayout>
+                                                <Label Style="{x:DynamicResource content}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="("></Span>
+                                                            <Span Text="{Binding Id, StringFormat='{0:D5}'}"></Span>
+                                                            <Span Text=")  "></Span>
+                                                            <Span Text="{Binding Nama}"></Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Style="{x:DynamicResource title}" FontSize="Small">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Stok : "></Span>
+                                                            <Span Text="{Binding Stock  , StringFormat='{0:N}'}"></Span>
+                                                            <Span Text=" "></Span>
+                                                            <Span Text="{Binding Satuans[0].Nama}"></Span>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </StackLayout>
                                             <StackLayout Orientation="Horizontal" >
                                                 <Label Style="{x:DynamicResource title}" Margin="0,0,30,0" Text="{Binding Keterangan}" HorizontalOptions="StartAndExpand" FontSize="Micro" ></Label>
                                                 <Label MinimumWidthRequest="200" Style="{x:DynamicResource title}" HorizontalOptions="EndAndExpand" Text="{Binding Satuans[0].HargaJual, StringFormat='Rp. {0:N0}'}" FontSize="Small" ></Label>

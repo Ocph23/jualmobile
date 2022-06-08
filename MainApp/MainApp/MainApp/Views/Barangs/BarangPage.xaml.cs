@@ -1,4 +1,5 @@
 ﻿using MainApp.Models;
+using MainApp.Services;
 using MainApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -36,6 +37,7 @@ namespace MainApp.Views.Barangs
         public Command AddCommand { get; }
         public Command ShowSatuanCommand { get; }
         public Command EditCommand { get; }
+        public Command ExportCommand { get; }
         public Command DeleteCommand { get; }
         public Command RefreshCommand { get; }
        
@@ -97,6 +99,11 @@ namespace MainApp.Views.Barangs
                 }
             });
 
+            ExportCommand = new Command(async (x) => {
+                await ExportAction();
+            }, x => true);
+
+
 
             DeleteCommand = new Command(async (object data) =>
             {
@@ -112,6 +119,37 @@ namespace MainApp.Views.Barangs
             RefreshCommand = new Command(async () => await Load());
         }
 
+        private async Task ExportAction()
+        {
+
+            var excelService = new ExcelService();
+            var fileName = $"Stock Barang -{Guid.NewGuid()}.xlsx";
+            string filepath = excelService.GenerateExcel(fileName);
+
+            var data = new ExcelStructureBarang
+            {
+                Tanggal = DateTime.Now,
+                Values = Items.ToList(),
+                Headers = new List<HeaderCell>() {
+                    new HeaderCell { Title="Kode Barang" },
+                    new HeaderCell { Title = "Nama Barang" },
+                    new HeaderCell { Title = "Satuan" },
+                    new HeaderCell { Title = "Harga Beli" },
+                    new HeaderCell { Title = "Harga Jual" },
+                    new HeaderCell { Title = "Stock" }}
+            };
+
+            excelService.InsertDataBarangIntoSheet(filepath, "Stock barang", data);
+
+            await Launcher.OpenAsync(new OpenFileRequest()
+            {
+                File = new ReadOnlyFile(filepath)
+            });
+
+
+
+        }
+
         private async Task Load()
         {
             try
@@ -123,6 +161,7 @@ namespace MainApp.Views.Barangs
                 Items.Clear();
                 foreach (var item in datas)
                 {
+                    item.Stock = await BarangStore.GetStock(item.Id);
                     Items.Add(item);
                 }
             }

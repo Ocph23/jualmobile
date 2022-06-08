@@ -171,6 +171,114 @@ namespace MainApp.Services
                 wbPart.Workbook.Save();
             }
         }
+
+        public void InsertDataBarangIntoSheet(string fileName, string sheetName, ExcelStructureBarang data)
+        {
+            Environment.SetEnvironmentVariable("MONO_URI_DOTNETRELATIVEORABSOLUTE", "true");
+
+            using (var document = SpreadsheetDocument.Open(fileName, true))
+            {
+                var wbPart = document.WorkbookPart;
+                WorkbookStylesPart stylePart = wbPart.AddNewPart<WorkbookStylesPart>();
+                stylePart.Stylesheet = GenerateStylesheet();
+                stylePart.Stylesheet.Save();
+
+                var sheets = wbPart.Workbook.GetFirstChild<Sheets>().
+                             Elements<Sheet>().FirstOrDefault().
+                             Name = sheetName;
+
+                var part = wbPart.WorksheetParts.First();
+                var sheetData = part.Worksheet.Elements<SheetData>().First();
+
+                var col1 = sheetData.AppendChild(new Column() { Width = 100 });
+                col1.Width = 34;
+                var rowTitle = sheetData.AppendChild(new Row() { Height = 100 });
+                rowTitle.Append(new Cell()
+                {
+                    CellValue = new CellValue($"LAPORAN STOCK BARANG PER {data.Tanggal.ToString("dd/MM/yyyy")}"),
+                    DataType = new EnumValue<CellValues>(CellValues.String)
+                });
+
+                sheetData.AppendChild(new Row());
+                sheetData.AppendChild(new Row());
+                sheetData.AppendChild(new Row());
+
+                var row = sheetData.AppendChild(new Row());
+
+
+
+                foreach (var header in data.Headers)
+                {
+                    var cell = new Cell()
+                    {
+                        CellValue = new CellValue(header.Title),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(CellValues.String)
+                    };
+                    row.Append(cell);
+
+
+                }
+
+                Columns lstColumns = sheetData.GetFirstChild<Columns>();
+
+                if (lstColumns == null)
+                {
+                    lstColumns = new Columns();
+                    lstColumns.AppendChild(new Column { Width = 500 });
+                }
+
+
+                foreach (var barang in data.Values)
+                {
+                    var dataRow = sheetData.AppendChild(new Row());
+
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = new CellValue(barang.Id.ToString("D5")),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(barang.Id.ToString()))
+                    });
+
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = new CellValue(barang.Nama),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(barang.Nama))
+                    });
+
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = barang.Satuans.Count <= 0 ? new CellValue("") : new CellValue(barang.Satuans[0].Nama),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(Convert.ToString(0)))
+                    });
+
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = barang.Satuans.Count<=0? new CellValue(0): new CellValue(barang.Satuans[0].HargaBeli),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(Convert.ToDouble(0)))
+                    });
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = barang.Satuans.Count <= 0 ? new CellValue(0) : new CellValue(barang.Satuans[0].HargaBeli),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(Convert.ToDouble(0)))
+                    });
+
+                    dataRow.Append(new Cell()
+                    {
+                        CellValue = new CellValue(barang.Stock),
+                        StyleIndex = 1,
+                        DataType = new EnumValue<CellValues>(GetCellType(barang.Stock))
+                    });
+
+                }
+                wbPart.Workbook.Save();
+            }
+        }
+
         public CellFormat GetCellFormat(WorkbookPart workbookPart, uint styleIndex)
         {
             return workbookPart.WorkbookStylesPart.Stylesheet.Elements<CellFormats>().First().Elements<CellFormat>().ElementAt((int)styleIndex);

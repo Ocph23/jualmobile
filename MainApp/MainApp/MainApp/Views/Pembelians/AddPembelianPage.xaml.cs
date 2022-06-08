@@ -90,7 +90,6 @@ namespace MainApp.Views.Pembelians
                     }
 
                     await Helper.InfoMessage("Data Berhasil Disimpan !");
-                   await AppShell.Current.Navigation.PopAsync();
                 }
                 catch (Exception ex)
                 {

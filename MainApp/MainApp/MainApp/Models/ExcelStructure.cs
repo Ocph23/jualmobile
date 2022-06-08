@@ -15,6 +15,15 @@ namespace MainApp.Models
         public List<Penjualan> Values { get; set; } = new List<Penjualan>();
     }
 
+    public class ExcelStructureBarang
+    {
+        public DateTime Tanggal { get; set; }
+
+
+        public List<HeaderCell> Headers { get; set; } = new List<HeaderCell>();
+        public List<Barang> Values { get; set; } = new List<Barang>();
+    }
+
     public class HeaderCell
     {
        

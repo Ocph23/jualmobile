@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm ="clr-namespace:MainApp.Views.Penjualans"
              x:Class="MainApp.Views.Penjualans.PenjualanPage"
+             
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png" Command="{Binding AddCommand}"/>
@@ -30,16 +32,16 @@
 
                 <StackLayout Grid.Column="2" Orientation="Horizontal">
                     <ImageButton Command="{Binding RefreshCommand}"  Padding="10" Margin="2" Source="search.png" BackgroundColor="#A338E6" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
-                    <ImageButton Command="{Binding ExportCommand}" IsVisible="{Binding ShowExport}"  Padding="2" Margin="2" Source="excelxlsicon.png" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
+                    <ImageButton BackgroundColor="Transparent" Command="{Binding ExportCommand}" IsVisible="{Binding ShowExport}"  Padding="2" Margin="2" Source="excelxlsicon.png" HeightRequest="20" WidthRequest="50" HorizontalOptions="Center"></ImageButton>
                 </StackLayout>
 
             </Grid>
             <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" 
              Command="{Binding RefreshCommand}">
-                <CollectionView ItemsSource="{Binding Items}" EmptyView="No items to display" >
+                <CollectionView ItemsSource="{Binding Items}" SelectionChanged="CollectionView_SelectionChanged" EmptyView="No items to display" SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="2">
+                            <StackLayout Padding="2" >
                                 <Frame CornerRadius="10" >
                                     <StackLayout>
                                         <Label Style="{x:DynamicResource title}" HorizontalOptions="End" Text="{Binding Tanggal, StringFormat='{0:dd/MM/yyyy HH:mm:ss}'}"/>
@@ -54,7 +56,11 @@
                                         </Label>
 
                                     </StackLayout>
+                                   
+
                                 </Frame>
+                            
+
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

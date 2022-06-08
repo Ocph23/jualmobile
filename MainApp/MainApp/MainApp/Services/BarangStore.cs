@@ -65,8 +65,7 @@ namespace MainApp.Services
 
                var satuans = await Database.Table<Satuan>().ToListAsync();
                 var q = from a in barangs
-                        join b in satuans on a.Id equals b.Id into g
-                        from b in g.DefaultIfEmpty()
+                        join b in satuans on a.Id equals b.BarangId into  g
                         select new Barang { Satuans = g.ToList(), Photo=a.Photo, Barcode = a.Barcode, Id = a.Id, Keterangan = a.Keterangan, Nama = a.Nama, Supplier = a.Supplier, SupplierId = a.SupplierId };
 
                 return q.ToList();
@@ -93,7 +92,8 @@ namespace MainApp.Services
 
         public Task<List<Satuan>> GetSatuans(int barangId)
         {
-            return Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
+            var data=Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
+            return data;
         }
 
         public async Task<bool> EditSatuan(Satuan satuan)
@@ -130,6 +130,7 @@ namespace MainApp.Services
         {
             try
             {
+                var con = Database.GetConnection();
                 var barang= await Database.Table<Barang>().Where(x => x.Id== barangId).FirstAsync();
                 var satuans = await Database.Table<Satuan>().Where(x => x.BarangId == barangId).ToListAsync();
 
@@ -141,9 +142,6 @@ namespace MainApp.Services
                 var pembelian = from data in await Database.Table<PembelianItem>().Where(x => x.BarangId == barangId).ToListAsync()
                                 join satuan in await Database.Table<Satuan>().ToListAsync() on data.SatuanId equals satuan.Id
                                 select data.Jumlah * satuan.Quantity ;
-
-
-
                 var penjualan = from data in await Database.Table<PenjualanItem>().Where(x => x.BarangId == barangId).ToListAsync()
                                 join satuan in await Database.Table<Satuan>().ToListAsync() on data.SatuanId equals satuan.Id
                                 select data.Jumlah * satuan.Quantity;

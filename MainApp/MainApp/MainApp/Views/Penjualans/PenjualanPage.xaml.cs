@@ -23,6 +23,17 @@ namespace MainApp.Views.Penjualans
             InitializeComponent();
             BindingContext = new PenjualanViewModel();
         }
+
+        private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.CurrentSelection.Count > 0)
+            {
+                 var vm = (PenjualanViewModel)BindingContext;
+                vm.Items.Clear();
+                var model = (Penjualan)e.CurrentSelection[0];
+                 vm.PenjualanDetailCommand.Execute(model);
+            }
+        }
     }
 
     public class PenjualanViewModel : BaseViewModel
@@ -30,6 +41,7 @@ namespace MainApp.Views.Penjualans
         public ObservableCollection<Penjualan> Items { get; set; } = new ObservableCollection<Penjualan>();
         public Command AddCommand { get; }
         public Command RefreshCommand { get; }
+        public Command PenjualanDetailCommand { get; }
 
         private bool isRefreshing;
         public bool IsRefreshing
@@ -60,6 +72,9 @@ namespace MainApp.Views.Penjualans
 
 
 
+            PenjualanDetailCommand = new Command(PenjualanDetailAction);
+
+
 
 
             this.PropertyChanged += PenjualanViewModel_PropertyChanged;
@@ -67,8 +82,19 @@ namespace MainApp.Views.Penjualans
             RefreshCommand.Execute(null);
 
         }
-       
-        
+
+        private void PenjualanDetailAction(object obj)
+        {
+            var penjualan= (Penjualan)obj;
+            var form = new AddPenjualanPage();
+            var vm = (AddPenjualanViewModel)form.BindingContext;
+            foreach (var item in penjualan.Items)
+            {
+                vm.Items.Add(item);
+            }
+            vm.Model = penjualan;
+            Shell.Current.Navigation.PushAsync(form);
+        }
 
         private async Task ExportAction()
         {

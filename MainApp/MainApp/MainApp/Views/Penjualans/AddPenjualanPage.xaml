@@ -4,8 +4,7 @@
              xmlns:helpers="clr-namespace:MainApp.Helpers"
              xmlns:model="clr-namespace:MainApp.Models"
              Title="{Binding Model.Id,StringFormat='{0:D5}'}"
-             xmlns:vm="clr-namespace:MainApp.Views.Penjualans"
-BackgroundColor="WhiteSmoke"
+             xmlns:vm="clr-namespace:MainApp.Views.Penjualans" BackgroundColor="WhiteSmoke"
              x:Class="MainApp.Views.Penjualans.AddPenjualanPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
@@ -34,10 +33,22 @@ BackgroundColor="WhiteSmoke"
                 </StackLayout>
             </Frame>
             <RefreshView x:DataType="vm:AddPenjualanViewModel">
-                <CollectionView ItemsSource="{Binding Items}">
+                    <CollectionView ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" SelectionMode="Single" EmptyView="No items to display">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="2">
+                                <SwipeView >
+                                    <SwipeView.RightItems>
+                                        <SwipeItems >
+                                            <SwipeItemView >
+                                                <StackLayout VerticalOptions="CenterAndExpand" Margin="0">
+                                                    <Button Text="Delete" BackgroundColor="Red" HeightRequest="35" Padding="2"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddPenjualanViewModel}}, Path=DeleteItemCommand}"		
+                                                            CommandParameter="{Binding SelectedItem}"/>
+                                                </StackLayout>
+                                            </SwipeItemView>
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+                                    <StackLayout Padding="2">
                                 <Frame CornerRadius="10">
                                     <Grid  x:DataType="model:PenjualanItem">
                                         <Grid.ColumnDefinitions>
@@ -72,6 +83,10 @@ BackgroundColor="WhiteSmoke"
                                     </Grid>
                                 </Frame>
                             </StackLayout>
+                                </SwipeView>
+
+
+
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
