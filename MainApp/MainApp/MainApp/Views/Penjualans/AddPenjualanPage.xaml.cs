@@ -32,6 +32,7 @@ namespace MainApp.Views.Penjualans
         public Penjualan Model { get; set; } = new Penjualan() { Items = new List<PenjualanItem>() };
         public Command SearchCommand { get; private set; }
         public Command DeleteItemCommand { get; private set; }
+        public Command BayarCommand { get; private set; }
         public Command ScanCommand { get; private set; }
         public Command SaveCommand { get; private set; }
 
@@ -75,6 +76,13 @@ namespace MainApp.Views.Penjualans
                 if (SelectedItem != null)
                     Items.Remove(SelectedItem);
 
+            });
+
+            BayarCommand = new Command(() => {
+                Model.Items = Items.ToList();
+                var page = new BayarPage();
+                page.BindingContext = new BayarViewModel(Model);
+                AppShell.Current.Navigation.PushModalAsync(page);
             });
 
             ScanCommand = new Command(() =>

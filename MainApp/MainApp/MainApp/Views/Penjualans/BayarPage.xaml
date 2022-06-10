@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MainApp.Views.Penjualans.BayarPage">
+    <ContentPage.Content>
+        <Frame>
+            <Grid Padding="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackLayout>
+                    <Label Text="Pembayaran" Margin="0,15" FontSize="20"/>
+                </StackLayout>
+                <StackLayout Grid.Row="1" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="60*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Tanggal"/>
+                            <Label Text="Pelanggan"/>
+                            <Label Text="Jumlah "/>
+                            <Label Text="Bayar" HeightRequest="48" VerticalTextAlignment="Center"/>
+                            <Label Text="Kembalian"/>
+                        </StackLayout>
+                        <StackLayout Grid.Column="1">
+                            <Label Text=" : "/>
+                            <Label Text=" : "/>
+                            <Label Text=" : "/>
+                            <Label Text=" : " VerticalOptions="Center" HeightRequest="48"/>
+                            <Label Text=" : "/>
+                        </StackLayout>
+                        
+                        <StackLayout Grid.Column="2" >
+                            <Label Text="{Binding model.Tanggal,StringFormat='{0:dd/MM/yyyy}'}"/>
+                            <Label Text="{Binding model.Pelanggan}"/>
+                            <Label Text="{Binding GrandTotal}"/>
+                            <Frame BackgroundColor="White" Padding="5" HeightRequest="40" Margin="0">
+                                <Entry Keyboard="Numeric" Text="{Binding Bayar}"/>
+                            </Frame>
+                            <Label Text="{Binding Kembalian,StringFormat='Rp. {0:N}'}"/>
+                        </StackLayout>
+                    </Grid>
+                </StackLayout>
+            </Grid>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

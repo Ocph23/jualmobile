@@ -4,7 +4,8 @@
              xmlns:helpers="clr-namespace:MainApp.Helpers"
              xmlns:model="clr-namespace:MainApp.Models"
              Title="{Binding Model.Id,StringFormat='{0:D5}'}"
-             xmlns:vm="clr-namespace:MainApp.Views.Penjualans" BackgroundColor="WhiteSmoke"
+             xmlns:vm="clr-namespace:MainApp.Views.Penjualans" 
+             BackgroundColor="WhiteSmoke"
              x:Class="MainApp.Views.Penjualans.AddPenjualanPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
@@ -93,8 +94,8 @@
             </RefreshView>
         </StackLayout>
           <Frame Grid.Row="1">
-                <StackLayout Orientation="Horizontal">
-                    <Label Style="{StaticResource content }" FontAttributes="Bold">
+                <StackLayout Orientation="Horizontal" >
+                    <Label Style="{StaticResource content }" FontAttributes="Bold" VerticalOptions="CenterAndExpand">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span  Text="Total Rp."></Span>
@@ -102,6 +103,7 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
+                    <Button Command="{Binding BayarCommand}" BackgroundColor="OrangeRed" HeightRequest="40" HorizontalOptions="EndAndExpand" Text="Bayar"/>
                 </StackLayout>
           </Frame>
         </Grid>
